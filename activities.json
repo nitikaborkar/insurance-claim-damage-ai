@@ -1,0 +1,436 @@
+{
+    "Sofa / Couch working ? watching tv?": [
+        {
+            "cue": "Head pushed forward / looking down at a low laptop or tablet",
+            "body_region": "Neck",
+            "risk": "Looking down increases load on neck muscles and joints, causing neck pain and headaches over time.",
+            "long_term_practice": "Raise the laptop/tablet on a tray table or cushions so the screen is closer to eye level.",
+            "quick_fix": "Put the laptop on two firm pillows to bring it higher immediately."
+        },
+        {
+            "cue": "Chin tucked toward chest; device positioned very low",
+            "body_region": "Neck / Upper back",
+            "risk": "Deep neck flexion fatigues the upper spine and leads to tightness and discomfort.",
+            "long_term_practice": "Keep device slightly below eye height, not at lap level.",
+            "quick_fix": "Support elbows so phone/tablet can be held higher."
+        },
+        {
+            "cue": "Rounded C-shaped upper back",
+            "body_region": "Upper back",
+            "risk": "Rounding overstretches mid-back muscles and reduces rib movement, causing fatigue.",
+            "long_term_practice": "Sit upright with firm cushions supporting mid-back and upper back.",
+            "quick_fix": "Slide hips back and lean into a firmer cushion."
+        },
+        {
+            "cue": "Slumped lower back; pelvis sliding forward into sofa",
+            "body_region": "Lower back",
+            "risk": "Slumping removes natural lumbar support and increases pressure on lumbar discs, leading to low back pain.",
+            "long_term_practice": "Use a small cushion/rolled towel behind the lower back for support.",
+            "quick_fix": "Place a rolled towel behind your lower back right now."
+        }, 
+        {
+            "cue": "Shoulders elevated or arms unsupported",
+            "body_region": "Shoulders / Arms",
+            "risk": "Unsupported arms force shoulder muscles to hold weight, causing tension in neck and shoulders.",
+            "long_term_practice": "Support forearms on a cushion, armrest, or lap desk.",
+            "quick_fix": "Rest elbows on a pillow immediately."
+        },
+        {
+            "cue": "Sitting twisted toward one side to view screen",
+            "body_region": "Neck / Trunk",
+            "risk": "Twisting the neck or trunk to one side stresses the muscles unevenly and can cause one-sided pain.",
+            "long_term_practice": "Center screen directly in front of the body.",
+            "quick_fix": "Rotate your body so your chest faces the device."
+        },
+        {
+            "cue": "Feet not touching the floor or legs stretched out on table",
+            "body_region": "Hips / Legs",
+            "risk": "Poor foot support affects hip alignment and circulation, causing leg or hip discomfort.",
+            "long_term_practice": "Keep feet flat on floor or a stable footrest.",
+            "quick_fix": "Place feet on floor or a low stool right now."
+        },
+        {
+            "cue": "Laptop placed far to the side",
+            "body_region": "Neck",
+            "risk": "Turning the head repeatedly causes neck rotation strain and headaches.",
+            "long_term_practice": "Keep laptop directly in front at midline.",
+            "quick_fix": "Move laptop/tablet to the center immediately."
+        },
+        {
+            "cue": "Hunched position from deep sofa seat (too soft / too deep)",
+            "body_region": "Whole spine",
+            "risk": "Soft sofas push pelvis forward and promote a full-spine slump increasing overall spinal strain.",
+            "long_term_practice": "Add firm cushions to make the seat more supportive.",
+            "quick_fix": "Sit on the front half of the sofa and place a firm pillow behind you."
+        }
+    ],
+    "USING PHONE IN BED": [
+        {
+            "cue": "Head bent forward while looking down at phone in lap",
+            "body_region": "Neck",
+            "risk": "Looking down sharply increases load on neck muscles, causes neck strain and headaches.",
+            "long_term_practice": "Raise phone closer to eye level using arm support or stand.",
+            "quick_fix": "Rest elbows on a pillow so phone rises automatically."
+        },
+        {
+            "cue": "Chin close to chest (deep neck flexion)",
+            "body_region": "Neck / Upper back",
+            "risk": "Deep flexion compresses cervical structures and fatigues upper spine.",
+            "long_term_practice": "Keep neck tall and bring phone higher; avoid placing phone on stomach or lap.",
+            "quick_fix": "Hold phone higher using both hands supported on pillow."
+        },
+        {
+            "cue": "Rounded upper back while scrolling",
+            "body_region": "Upper back",
+            "risk": "Excessive upper-back rounding overstretches muscles and increases mid-back fatigue.",
+            "long_term_practice": "Sit more upright with pillows supporting the whole spine.",
+            "quick_fix": "Add 1–2 firm pillows behind your upper back."
+        },
+        {
+            "cue": "Lower back unsupported while semi-reclining",
+            "body_region": "Lower back",
+            "risk": "Lack of lumbar support increases disc pressure and can cause morning stiffness.",
+            "long_term_practice": "Add small cushion/rolled towel behind the lower back.",
+            "quick_fix": "Place a rolled towel behind lower back right now."
+        },
+        {
+            "cue": "Shoulders raised while holding phone",
+            "body_region": "Shoulders / Neck",
+            "risk": "Lifting shoulders tightens upper trapezius → tension, headaches.",
+            "long_term_practice": "Support forearms so shoulders can relax downward.",
+            "quick_fix": "Put pillow under elbows immediately."
+        },
+        {
+            "cue": "Phone very close to face",
+            "body_region": "Eyes",
+            "risk": "Short viewing distance increases eye strain and forces neck flexion.",
+            "long_term_practice": "Keep device at forearm length (~35–45 cm).",
+            "quick_fix": "Move phone slightly further away; increase font size."
+        },
+        {
+            "cue": "One arm holding phone for long time",
+            "body_region": "Forearm / Wrist",
+            "risk": "One-hand holding strains wrist flexors/extensors → increases risk of soreness.",
+            "long_term_practice": "Alternate hands + support elbows/forearms.",
+            "quick_fix": "Switch hands or rest phone against pillow."
+        },
+        {
+            "cue": "Asymmetrical posture (one knee up, one straight)",
+            "body_region": "Hips / Lower back",
+            "risk": "Twisting hips or pelvis creates uneven spinal loading, irritating SI joint and lower back.",
+            "long_term_practice": "Keep legs in a more symmetrical, relaxed position.",
+            "quick_fix": "Adjust lower body so both legs are similarly angled."
+        },
+        {
+            "cue": "Semi-lying with neck propped high on pillow",
+            "body_region": "Neck",
+            "risk": "Over-elevated head leads to neck extension, causing stiffness.",
+            "long_term_practice": "Use flatter pillow or raise trunk instead of just head.",
+            "quick_fix": "Remove extra pillow; slide body up to support entire torso."
+        }
+    ],
+    "WATCHING TV IN BED": [
+        {
+            "cue": "Head leaning forward or chin tilted upward to see TV",
+            "body_region": "Neck",
+            "risk": "Forward head or upward chin posture strains neck joints and muscles, leading to headaches and stiffness.",
+            "long_term_practice": "Adjust TV height so your eyes naturally look forward, not up or down.",
+            "quick_fix": "Change pillow height or slide body up/down until neck feels neutral."
+        },
+        {
+            "cue": "Neck rotated to one side while watching",
+            "body_region": "Neck / Upper back",
+            "risk": "Sustained rotation tightens one side of neck and compresses joints → uneven pain.",
+            "long_term_practice": "Position TV directly in front of your body.",
+            "quick_fix": "Shift your body or pillow so chest faces TV straight-on."
+        },
+        {
+            "cue": "Slouching into a C-shaped curve while reclining",
+            "body_region": "Upper back",
+            "risk": "Rounded upper back overstretches muscles and creates mid-back fatigue.",
+            "long_term_practice": "Use firm pillows along the entire spine so trunk stays upright.",
+            "quick_fix": "Add one extra firm pillow behind upper back."
+        }, 
+        {
+            "cue": "Lower back unsupported with pelvis sliding forward",
+            "body_region": "Lower back",
+            "risk": "Loss of lumbar support increases disc pressure → morning stiffness + low back pain.",
+            "long_term_practice": "Use a lumbar cushion/rolled towel behind the low back.",
+            "quick_fix": "Place rolled towel behind lower back immediately."
+        },
+        {
+            "cue": "Reclining too flat with only head elevated",
+            "body_region": "Neck / Lower back",
+            "risk": "Creates sharp bend between neck + trunk → strains cervical spine + collapses lumbar curve.",
+            "long_term_practice": "Raise the entire torso (shoulders–hips), not just the head.",
+            "quick_fix": "Stack pillows behind the back, not under the head alone."
+        },
+        {
+            "cue": "Knees fully straight, legs loaded unevenly",
+            "body_region": "Hips / Legs",
+            "risk": "Straight legs pull pelvis into posterior tilt → increases lower-back strain.",
+            "long_term_practice": "Slight knee bend with pillow support under thighs.",
+            "quick_fix": "Put pillow under knees to reduce pull on lower back."
+        },
+        {
+            "cue": "Arms unsupported while holding remote/phone",
+            "body_region": "Shoulders / Arms",
+            "risk": "Unsupported arms increase shoulder tension → neck tightness.",
+            "long_term_practice": "Support elbows on pillows or armrests.",
+            "quick_fix": "Rest elbows on any cushion immediately."
+        },
+        {
+            "cue": "Lying twisted (body facing forward but head turned to TV)",
+            "body_region": "Spine (whole)",
+            "risk": "Torso–neck twist creates uneven loading and overworks one side of back.",
+            "long_term_practice": "Align body and head toward TV in one direction.",
+            "quick_fix": "Reposition pillows or entire body to face the TV."
+        },
+        {
+            "cue": "TV too close or too far",
+            "body_region": "Eyes",
+            "risk": "Eye strain → leads to head tilt/neck compensations.",
+            "long_term_practice": "Keep TV at least 2–3 screen heights away.",
+            "quick_fix": "Adjust distance slightly or tilt screen for comfort."
+        }
+    ],
+    "SITTING ON FLOOR": [
+        {
+            "cue": "Head bent forward to look at low table, book, or device",
+            "body_region": "Neck",
+            "risk": "Looking down sharply increases neck muscle load, causing neck pain and headaches.",
+            "long_term_practice": "Raise work surface (low table, stand, or pillow stack) so you don't have to look down as much.",
+            "quick_fix": "Place book/laptop on a box, cushion, or low stool."
+        },
+        {
+            "cue": "Rounded upper back while leaning forward",
+            "body_region": "Upper back",
+            "risk": "“C-shaped” rounding fatigues mid-back muscles and restricts rib movement.",
+            "long_term_practice": "Sit using a wall/sofa as a backrest to keep spine more upright.",
+            "quick_fix": "Move back until shoulders touch a wall or cushion."
+        },
+        {
+            "cue": "Lower back collapsed; pelvis rolled backward",
+            "body_region": "Lower back",
+            "risk": "Posterior pelvic tilt removes lumbar support, increasing disc pressure.",
+            "long_term_practice": "Sit on a firm cushion to raise hips above knees; maintain slight forward pelvic tilt.",
+            "quick_fix": "Sit on folded blanket/pillow immediately to lift hips."
+        }, 
+        {
+            "cue": "Knees deeply bent (tight cross-legged or kneeling)",
+            "body_region": "Knees / Hips",
+            "risk": "Deep flexion compresses joints and tightens hip flexors → discomfort over time.",
+            "long_term_practice": "Change sitting style regularly: cross-legged, one leg extended, kneeling, side-sit.",
+            "quick_fix": "Extend one leg forward right now to reduce knee pressure."
+        },
+        {
+            "cue": "Ankles trapped under body (sitting on heels)",
+            "body_region": "Ankles / Feet",
+            "risk": "Prolonged compression reduces blood flow → numbness, discomfort.",
+            "long_term_practice": "Avoid sitting directly on heels for long; alternate leg positions.",
+            "quick_fix": "Shift weight and bring feet out from under hips."
+        },
+        {
+            "cue": "Twisted lower body (one leg folded, one straight)",
+            "body_region": "Hips / SI joint",
+            "risk": "Asymmetry loads hips unevenly → SI joint irritation + low-back discomfort.",
+            "long_term_practice": "Keep leg positions more symmetrical; rotate positions frequently.",
+            "quick_fix": "Mirror the position (bend both or straighten both) for balance."
+        },
+        {
+            "cue": "Reaching forward to work on floor",
+            "body_region": "Shoulders / Arms",
+            "risk": "Forward-reaching posture strains shoulders + upper back muscles.",
+            "long_term_practice": "Bring work item closer or use a small table/lap desk.",
+            "quick_fix": "Pull device closer or rest forearms on pillow."
+        },
+        {
+            "cue": "Sitting far from a support (wall/sofa)",
+            "body_region": "Spine (whole)",
+            "risk": "Unsupported trunk forces muscles to work continuously → fatigue and slouching.",
+            "long_term_practice": "Work close to a backrest whenever possible.",
+            "quick_fix": "Move closer to wall/sofa to support your back."
+        },
+        {
+            "cue": "Device or book on floor level",
+            "body_region": "Neck / Upper back",
+            "risk": "Low placement forces deep neck flexion and slouch.",
+            "long_term_practice": "Elevate devices/books 10–20 cm using stable surfaces.",
+            "quick_fix": "Use a pillow stack or small stool immediately."
+        }
+    ],
+    "COOKING / KITCHEN STANDING POSTURE": [
+        {
+            "cue": "Leaning forward over counter (back rounded)",
+            "body_region": "Upper & Lower Back",
+            "risk": "Bending forward loads the spine and fatigues back muscles, leading to back pain.",
+            "long_term_practice": "Stand closer to the counter and keep spine tall while chopping or washing.",
+            "quick_fix": "Move feet closer to the counter; engage core slightly."
+        },
+        {
+            "cue": "Neck bent down sharply while chopping",
+            "body_region": "Neck",
+            "risk": "Prolonged downward gaze strains neck muscles, causing stiffness and headaches.",
+            "long_term_practice": "Raise cutting board height or use elevated surface.",
+            "quick_fix": "Place chopping board on a stable tray or inverted pot to raise height."
+        }, 
+        {
+            "cue": "Shoulders lifted while reaching for utensils",
+            "body_region": "Shoulders / Neck",
+            "risk": "Elevated shoulders overwork upper trapezius → tension.",
+            "long_term_practice": "Keep frequently used items at chest/waist height.",
+            "quick_fix": "Lower shoulders consciously; reposition tools within easy reach."
+        },
+        {
+            "cue": "One-sided leaning while cooking (hip popped out)",
+            "body_region": "Lower Back / Hips",
+            "risk": "Asymmetrical standing stresses spine + hip muscles unevenly.",
+            "long_term_practice": "Stand evenly on both feet; distribute weight between legs.",
+            "quick_fix": "Reset posture and stand on both legs evenly."
+        },
+        {
+            "cue": "Stirring or prepping with arms too high above waist",
+            "body_region": "Shoulders / Arms",
+            "risk": "Working with high arm elevation fatigues shoulders quickly.",
+            "long_term_practice": "Adjust workstation height or lower pot/pan position.",
+            "quick_fix": "Bend elbows and keep arms closer to body while working."
+        },
+        {
+            "cue": "Washing dishes with back rounded over sink",
+            "body_region": "Upper & Lower Back",
+            "risk": "Sink depth pulls body into forward flexion → back strain.",
+            "long_term_practice": "Step closer to sink; use anti-fatigue mat; hinge at hips.",
+            "quick_fix": "Place one foot slightly forward to allow healthier hip hinge."
+        },
+        {
+            "cue": "Standing in one spot for long time",
+            "body_region": "Legs / Feet",
+            "risk": "Static standing reduces blood flow → fatigue, foot pain.",
+            "long_term_practice": "Shift weight intermittently; use supportive footwear.",
+            "quick_fix": "Change stance or march gently in place for 10 seconds."
+        },
+        {
+            "cue": "Twisting body repeatedly to grab items",
+            "body_region": "Spine / Hips",
+            "risk": "Repetitive twisting strains spinal joints.",
+            "long_term_practice": "Organize frequently used tools within arm’s reach.",
+            "quick_fix": "Move ingredients/tools closer before cooking."
+        }
+       ],
+    "DRIVING POSTURE": [
+        {
+            "cue": "Head poking forward while looking at road",
+            "body_region": "Neck",
+            "risk": "Forward head posture increases neck muscle load, causing neck pain.",
+            "long_term_practice": "Adjust headrest & seat so head stays aligned with spine.",
+            "quick_fix": "Bring upper back fully against seat and tuck chin slightly."
+        },
+        {
+            "cue": "Slouched upper back against seat",
+            "body_region": "Upper Back",
+            "risk": "Slouching overstretches back muscles → mid-back discomfort.",
+            "long_term_practice": "Keep seatback slightly reclined (100–110°) with full support.",
+            "quick_fix": "Pull shoulders back and sit deeper into seat."
+        },
+        {
+            "cue": "Lower back not touching seat (gap present)",
+            "body_region": "Lower Back",
+            "risk": "Lack of lumbar support causes lumbar fatigue and disc pressure.",
+            "long_term_practice": "Use built-in lumbar adjustment or add small cushion.",
+            "quick_fix": "Place a rolled towel at lower back immediately."
+        },
+        {
+            "cue": "Sitting too far from pedals (knees locked)",
+            "body_region": "Knees / Hips",
+            "risk": "Overstretched legs strain hips and reduce control.",
+            "long_term_practice": "Move seat forward so knees are slightly bent.",
+            "quick_fix": "Adjust seat 2–3 cm closer."
+        },
+        {
+            "cue": "Sitting too close (knees too bent)",
+            "body_region": "Knees / Lower Back",
+            "risk": "Over-flexed knees + hip compression cause discomfort.",
+            "long_term_practice": "Maintain slight knee bend (120–135°).",
+            "quick_fix": "Move seat slightly back."
+        },
+        {
+            "cue": "Arms overextended to reach steering wheel",
+            "body_region": "Shoulders / Upper Back",
+            "risk": "Overreaching tightens shoulders and pulls upper back into strain.",
+            "long_term_practice": "Adjust seat/steering wheel so elbows stay slightly bent.",
+            "quick_fix": "Adjust steering wheel toward you, if possible."
+        },
+        {
+            "cue": "Twisting torso to check blind spots excessively",
+            "body_region": "Neck / Spine",
+            "risk": "Repetitive twisting strains neck & trunk muscles.",
+            "long_term_practice": "Use mirrors properly & keep seat upright to reduce twisting.",
+            "quick_fix": "Adjust mirrors to minimize neck rotation."
+        },
+        {
+            "cue": "Hunching when looking down (phone/GPS misplacement)",
+            "body_region": "Neck / Upper Back",
+            "risk": "Looking down strains cervical spine.",
+            "long_term_practice": "Place GPS at eye level.",
+            "quick_fix": "Raise phone/GPS to dashboard level."
+        }
+    ],
+    "GAMING POSTURE": [
+        {
+            "cue": "Leaning forward intensely (gamer lean)",
+            "body_region": "Neck / Upper Back",
+            "risk": "Forward lean strains neck and upper back muscles, causing fatigue and pain.",
+            "long_term_practice": "Keep back supported; sit closer to screen if needed.",
+            "quick_fix": "Move closer to screen so you can sit back while playing."
+        },
+        {
+            "cue": "Neck bent down when gaming on handheld device",
+            "body_region": "Neck",
+            "risk": "Sustained flexion → neck strain, headaches.",
+            "long_term_practice": "Raise handheld to chest height using arm support.",
+            "quick_fix": "Hold device higher using both hands supported on cushion."
+        },
+        {
+            "cue": "Lower back slouched into seat",
+            "body_region": "Lower Back",
+            "risk": "Collapsed lumbar curve increases disc pressure.",
+            "long_term_practice": "Add lumbar support; use chair with firmer backrest.",
+            "quick_fix": "Place small pillow behind lower back."
+        },
+        {
+            "cue": "Sitting too far from screen → leaning forward",
+            "body_region": "Neck / Eyes",
+            "risk": "Leaning forward strains neck & eyes.",
+            "long_term_practice": "Position screen at comfortable distance (arm’s length for monitor).",
+            "quick_fix": "Move screen slightly closer or increase text size."
+        },
+        {
+            "cue": "Resting game controller on lap → wrist bend",
+            "body_region": "Wrists / Hands",
+            "risk": "Improper wrist angles strain tendons.",
+            "long_term_practice": "Keep wrists straight by raising elbows/controller.",
+            "quick_fix": "Rest controller on cushion to reduce wrist bend."
+        },
+        {
+            "cue": "Perching at edge of seat",
+            "body_region": "Lower Back / Hips",
+            "risk": "Lack of back support forces back muscles to work constantly.",
+            "long_term_practice": "Sit fully back into chair with support.",
+            "quick_fix": "Scoot backward until back touches the chair."
+        },
+        {
+            "cue": "Long gaming sessions without breaks",
+            "body_region": "Whole body",
+            "risk": "Prolonged stillness increases stiffness & fatigue.",
+            "long_term_practice": "Take breaks every 30–45 minutes.",
+            "quick_fix": "Stand/stretch for 10–15 seconds now."
+        },
+        {
+            "cue": "Shoulders raised while holding controller",
+            "body_region": "Shoulders / Neck",
+            "risk": "Elevated shoulders tighten upper trapezius.",
+            "long_term_practice": "Use footrest or adjust chair height so feet are flat.",
+            "quick_fix": "Place feet flat on floor or a stable surface."
+        }
+    ]
+}
