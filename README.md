@@ -2,7 +2,7 @@
 
 ## 1. Project Structure
 
-Example layout:
+Example layout:  
 
 ```text
 Ergo_Agent/
