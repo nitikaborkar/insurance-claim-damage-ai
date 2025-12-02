@@ -1,0 +1,20 @@
+*.ipynb
+
+# Ignore all .log files
+*.log
+
+# Ignore only in repo root
+/.env
+/.DS_Store
+
+ergonomic_assessment_results_with_version_3.json
+
+# Virtual environment
+.venv/
+
+testing_images/.DS_Store
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

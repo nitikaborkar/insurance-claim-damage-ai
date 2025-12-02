@@ -26,13 +26,15 @@ class AgentState(TypedDict):
     image_base64: str
     image_path: str
     activity_category: str
+    scene_context: str
     relevant_checks: List[Dict]
     risk_analysis: List[Dict]
     flagged_risks: List[Dict]
     recommendations: List[Dict]
-    messages: Annotated[List[str], add]  # For logging
-    should_skip_ergonomics: bool          # <-- add this
-    filter_result: Dict | None            # optional but useful
+    overall_risk_level: str
+    messages: Annotated[List[str], add]  
+    should_skip_ergonomics: bool
+    filter_result: Dict | None
 
 
 # ============================================================================

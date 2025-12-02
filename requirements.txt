@@ -5,4 +5,6 @@ langchain-core
 pandas
 openpyxl
 python-dotenv
-pillow 
+pillow
+flask-limiter 
+flask_cors

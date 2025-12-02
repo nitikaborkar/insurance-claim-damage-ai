@@ -1,8 +1,14 @@
 from langchain_core.messages import HumanMessage, SystemMessage
 from ergo_agent.state import AgentState, ERGONOMIC_DATA, ACTIVITY_CATEGORIES
 import json
+
 from langchain_anthropic import ChatAnthropic
-llm = ChatAnthropic(model="claude-sonnet-4-20250514", temperature=0)
+
+def make_model(model_name: str = "claude-sonnet-4-20250514"):
+    # basic built-in retries for transient failures
+    base = ChatAnthropic(model=model_name, temperature=0, max_retries=3)
+    return base
+
 
 def general_ergonomic_analysis(state: AgentState) -> AgentState:
     """
@@ -67,23 +73,38 @@ Only include risks you can actually see in the image. Be thorough but accurate."
             }
         ])
     ]
-    
-    response = llm.invoke(messages)
-    
+
+    llm = make_model("claude-sonnet-4-20250514")
+
+    try:
+        response = llm.invoke(messages)
+    except Exception as e:
+        print(f"⚠️ General analysis: primary model failed: {e}")
+        try:
+            llm_fallback = make_model("claude-haiku-3-20241022")
+            response = llm_fallback.invoke(messages)
+        except Exception as e2:
+            print(f"🛑 General analysis: fallback model also failed: {e2}")
+            # safe fallback
+            state["risk_analysis"] = []
+            state["flagged_risks"] = []
+            state["messages"].append("General analysis failed due to model errors")
+            return state
+
     # Parse the response
     try:
         response_text = response.content.strip()
         if "```json" in response_text:
             response_text = response_text.split("```json")[1].split("```")[0]
         elif "```" in response_text:
-            response_text = response_text.split("```")[1].split("```")[0]
-        
+            response_text = response_text.split("``````")[0]
+
         analysis_result = json.loads(response_text)
         risk_analysis = analysis_result.get("risk_analysis", [])
-    except json.JSONDecodeError as e:
-        print(f"⚠️  Failed to parse JSON: {e}")
-        print(f"Response: {response.content[:200]}...")
+    except Exception as e:
+        print(f"⚠️ General analysis: failed to parse JSON: {e}")
         risk_analysis = []
+
     
     state["risk_analysis"] = risk_analysis
     
@@ -100,27 +121,29 @@ Only include risks you can actually see in the image. Be thorough but accurate."
     return state
 
 def activity_classifier_node(state: AgentState) -> AgentState:
-    """
-    Agent 1: Classify the activity in the image
-    Uses VLM to identify which activity category the image belongs to
-    """
     print("\n🔍 AGENT 1: Activity Classifier")
     print("=" * 60)
-        
-    # Prepare the prompt
-    categories_list = "\n".join([f"- {cat}" for cat in ACTIVITY_CATEGORIES])
-    
-    system_prompt = f"""You are an ergonomic activity classifier. Your job is to analyze an image and classify it into ONE of these specific activity categories:
 
+    llm = make_model("claude-sonnet-4-20250514")
+
+    categories_list = "\n".join([f"- {cat}" for cat in ACTIVITY_CATEGORIES])
+
+    system_prompt = f"""
+You are an ergonomic activity classifier.
+
+You MUST:
+1) Pick ONE activity category from this list:
 {categories_list}
 
-Analyze the image carefully and determine which activity category best matches what you see. Consider:
-- What is the person doing? (working, watching TV, gaming, cooking, etc.)
-- What is their posture/position? (on sofa, in bed, on floor, standing, sitting at desk, driving)
-- What devices or objects are visible? (laptop, phone, TV, gaming console, kitchen items, car interior)
+2) Briefly describe the overall environment/context in 1 short sentence:
+   - Examples: "indoor office with desk and laptop", "outdoor park bench", "home living room sofa", "factory floor with boxes", "public transport seat".
 
-Respond with ONLY the exact category name from the list above.
-If the image doesn't clearly match any category, respond with exactly: OTHERS"""
+Respond ONLY in this JSON format:
+{{
+  "activity_category": "exact category name or OTHERS",
+  "scene_context": "short description of where and how the person is situated"
+}}
+"""
 
     messages = [
         SystemMessage(content=system_prompt),
@@ -129,27 +152,53 @@ If the image doesn't clearly match any category, respond with exactly: OTHERS"""
                 "type": "image",
                 "source": {
                     "type": "base64",
-                    "media_type": "image/jpeg",
-                    "data": state["image_base64"]
-                }
+                    "media_type": "image/jpeg",  # if you always send JPEG
+                    "data": state["image_base64"],
+                },
             },
             {
                 "type": "text",
-                "text": "What activity category does this image belong to? Respond with ONLY the category name."
-            }
-        ])
-    ]
+                "text": "Classify the primary activity being performed in this image and describe the scene context.",
+            },
+        ]),]
     
-    response = llm.invoke(messages)
-    activity_category = response.content.strip()
-    
-    # Validate the category - allow "OTHERS" as valid
+    try:
+        response = llm.invoke(messages)
+    except Exception as e:
+        print(f"⚠️ Activity classifier: primary model failed: {e}")
+        try:
+            llm_fallback = make_model("claude-haiku-3-20241022")
+            response = llm_fallback.invoke(messages)
+        except Exception as e2:
+            print(f"🛑 Activity classifier: fallback model also failed: {e2}")
+            # safe fallback for classifier ONLY
+            state["activity_category"] = "OTHERS"
+            state["scene_context"] = "unspecified environment"
+            state["messages"].append("Activity classifier failed; defaulting to OTHERS")
+            return state
+
+       
+    response_text = response.content.strip()
+    if "```json" in response_text:
+        response_text = response_text.split("```json")[1].split("```")[0]
+    elif "```" in response_text:
+        response_text = response_text.split("```")[1].split("```")[0]
+
+    try:
+        parsed = json.loads(response_text)
+    except json.JSONDecodeError:
+        print("⚠️ Failed to parse classifier JSON, defaulting to OTHERS.")
+        parsed = {"activity_category": "OTHERS", "scene_context": "unspecified environment"}
+
+    activity_category = parsed.get("activity_category", "OTHERS").strip()
+    scene_context = parsed.get("scene_context", "unspecified environment").strip()
+
+    # existing validation logic for activity_category…
     if activity_category == "OTHERS":
         print(f"✅ Activity classified as: OTHERS (will use general analysis)")
     elif activity_category not in ACTIVITY_CATEGORIES:
-        print(f"⚠️  VLM returned: '{activity_category}'")
+        print(f"⚠️ VLM returned: '{activity_category}'")
         print("   Attempting to match to known categories...")
-        # Try fuzzy matching first
         matched = False
         for cat in ACTIVITY_CATEGORIES:
             if activity_category.lower() in cat.lower() or cat.lower() in activity_category.lower():
@@ -157,17 +206,16 @@ If the image doesn't clearly match any category, respond with exactly: OTHERS"""
                 matched = True
                 print(f"   ✓ Matched to: {activity_category}")
                 break
-        
-        # If no match found, use OTHERS instead of forcing wrong category
         if not matched:
             activity_category = "OTHERS"
             print(f"   No match found. Using general analysis: OTHERS")
     else:
         print(f"✅ Activity classified as: {activity_category}")
-    
+
     state["activity_category"] = activity_category
-    state["messages"].append(f"Classified activity: {activity_category}")
-    
+    state["scene_context"] = scene_context   # NEW
+    state["messages"].append(f"Classified activity: {activity_category}; context: {scene_context}")
+
     return state
 
 def filterer_node(state: AgentState) -> AgentState:
@@ -243,16 +291,31 @@ def filterer_node(state: AgentState) -> AgentState:
     ]),
     ]
 
-    response = llm.invoke(messages)
+    llm = make_model("claude-sonnet-4-20250514")
 
-    # Claude returns an AIMessage; extract text
+    try:
+        response = llm.invoke(messages)
+    except Exception as e:
+        print(f"⚠️ Filterer: primary model failed: {e}")
+        try:
+            llm_fallback = make_model("claude-haiku-3-20241022")
+            response = llm_fallback.invoke(messages)
+        except Exception as e2:
+            print(f"🛑 Filterer failed: {e2}")
+            state["filter_result"] = {
+                "validity": "INVALID",
+                "reason": "Model error during filtering",
+                "notes_for_downstream": "",
+            }
+            state["should_skip_ergonomics"] = True
+            state["messages"].append("Filterer failed due to model error; marking image as INVALID")
+            return state
+
     response_text = response.content.strip()
-
-    # Strip code fences if any
     if "```json" in response_text:
         response_text = response_text.split("```json")[1].split("```")[0]
     elif "```" in response_text:
-        response_text = response_text.split("```")[1].split("```")[0]
+        response_text = response_text.split("``````")[0]
 
     try:
         result = json.loads(response_text)
@@ -264,12 +327,10 @@ def filterer_node(state: AgentState) -> AgentState:
             "notes_for_downstream": "",
         }
 
-
     validity = (result.get("validity") or "").upper()
     reason = result.get("reason", "")
     notes = result.get("notes_for_downstream", "")
 
-    # Save into state for later nodes
     state["filter_result"] = {
         "validity": validity,
         "reason": reason,
@@ -278,24 +339,26 @@ def filterer_node(state: AgentState) -> AgentState:
 
     print(f"✅ Filter decision: {validity} — {reason}")
 
-    # If INVALID, you can either stop early or mark a flag
     if validity == "INVALID":
         state["should_skip_ergonomics"] = True
-        # Option A: short-circuit later nodes by returning early
-        # (your graph logic will need to check this flag)
         return state
 
     state["should_skip_ergonomics"] = False
     return state
 
+
+
 def risk_analyzer_node(state: AgentState) -> AgentState:
     """
-    Agent 2: Analyze risks based on the activity category
+    Agent 3: Analyze risks based on the activity category
     Extracts relevant checks and uses VLM to analyze if risks are present
     """
-    print("\n🔬 AGENT 2: Risk Analyzer")
+    print("\n🔬 AGENT 3: Risk Analyzer")
     print("=" * 60)
-        
+    
+    llm = make_model("claude-sonnet-4-20250514")
+
+    
     # Get relevant checks for this activity
     activity_category = state["activity_category"]
     relevant_checks = ERGONOMIC_DATA.get(activity_category, [])
@@ -391,7 +454,20 @@ Respond ONLY in this JSON format:
         ])
     ]
     
-    response = llm.invoke(messages)
+    try:
+        response = llm.invoke(messages)
+    except Exception as e:
+        print(f"⚠️ Risk analyzer: primary model failed: {e}")
+        try:
+            llm_fallback = make_model("claude-haiku-3-20241022")
+            response = llm_fallback.invoke(messages)
+        except Exception as e2:
+            print(f"🛑 Risk analyzer: fallback model also failed: {e2}")
+            state["risk_analysis"] = []
+            state["flagged_risks"] = []
+            state["messages"].append("Risk analyzer failed due to model errors")
+            return state
+
     
     # Parse the response
     try:
@@ -436,56 +512,145 @@ Respond ONLY in this JSON format:
 
 def recommender_node(state: AgentState) -> AgentState:
     """
-    Agent 3: Generate recommendations based on flagged risks
-    Provides both quick fixes and long-term best practices
+    Agent 4: LLM-based recommender.
+    Produces consolidated observed risks + a practical, context-aware recommendation list.
     """
-    print("\n💡 AGENT 3: Recommender")
+    print("\n💡 AGENT 4: Recommender")
     print("=" * 60)
-    
+
     flagged_risks = state["flagged_risks"]
-    
+    activity_category = state.get("activity_category", "OTHERS")
+    scene_context = state.get("scene_context", "unspecified environment")
+
     if not flagged_risks:
         print("✅ No risks flagged - no recommendations needed")
         state["recommendations"] = [{
-            "summary": "Great posture! No ergonomic risks detected.",
-            "quick_fixes": [],
-            "long_term_practices": []
+            "observed_risks": [],
+            "recommendations": ["Great posture overall. No significant ergonomic risks detected."],
         }]
         state["messages"].append("No risks detected")
         return state
-    
-    print(f"📝 Generating recommendations for {len(flagged_risks)} flagged risks")
-    
-    # Organize recommendations
-    recommendations = {
-        "summary": f"Found {len(flagged_risks)} ergonomic concerns that need attention:",
-        "quick_fixes": [],
-        "long_term_practices": [],
-        "detailed_risks": []
-    }
-    
-    for risk in flagged_risks:
-        recommendations["detailed_risks"].append({
-            "issue": risk.get("cue"),
-            "body_region": risk.get("body_region"),
-            "why_risky": risk.get("risk"),
-            "observation": risk.get("observation"),
-            "confidence": risk.get("confidence")
+
+    print(f"📝 Generating consolidated recommendations for {len(flagged_risks)} flagged risks")
+
+    # Prepare compact risk summary for the LLM
+    risks_for_llm = []
+    for r in flagged_risks:
+        risks_for_llm.append({
+            "body_region": r.get("body_region"),
+            "issue_cue": r.get("cue"),
+            "why_risky": r.get("risk"),
+            "observation": r.get("observation"),
+            "confidence": r.get("confidence"),
+            "example_quick_fix": r.get("quick_fix"),
+            "example_long_term_practice": r.get("long_term_practice"),
         })
-        
-        recommendations["quick_fixes"].append({
-            "body_region": risk.get("body_region"),
-            "action": risk.get("quick_fix")
-        })
-        
-        recommendations["long_term_practices"].append({
-            "body_region": risk.get("body_region"),
-            "practice": risk.get("long_term_practice")
-        })
-    
-    state["recommendations"] = [recommendations]
-    state["messages"].append(f"Generated recommendations for {len(flagged_risks)} risks")
-    
+
+    llm = make_model("claude-sonnet-4-20250514")
+
+    system_prompt = f"""
+You are an ergonomist writing a concise, practical report.
+
+Your goals:
+1. Produce a consolidated list of OBSERVED RISKS in clear language, suitable for a user report.
+2. Produce a single merged list of PRACTICAL RECOMMENDATIONS that a typical person could realistically follow,
+   given the scene context.
+3. Provide an OVERALL RISK LEVEL: LOW / MEDIUM / HIGH.
+
+Important constraints:
+- Use the provided example quick fixes / long-term practices as grounded inspiration ONLY.
+- Do NOT copy them verbatim or assume they fit the current context.
+- Tailor recommendations to the specific scene context and environment.
+- Filter out unrealistic suggestions for the environment.
+  - For outdoor / park / travel / temporary setups:
+    - Avoid recommending large furniture or fixed equipment (e.g., full-sized monitor arm, heavy sit-stand desk).
+    - Prefer body-position changes, how to hold devices, using existing objects (bag, railing), or simple, low-cost items.
+  - For home / office / workstation setups:
+    - It is acceptable to suggest buying small ergonomic accessories (laptop stand, external keyboard, footrest)
+      if they clearly help.
+- Keep the recommendations actionable and specific, not generic platitudes.
+- Limit yourself to at most 3-5 total recommendations.
+
+Use this information:
+- Activity category: {activity_category}
+- Scene context: {scene_context}
+
+You will receive a JSON array "flagged_risks" with items that include:
+- body_region
+- issue_cue
+- why_risky
+- observation (what the vision model saw)
+- confidence
+- example_quick_fix
+- example_long_term_practice
+
+From these, you must:
+1) Merge and group similar problems into a small list of observed risks.
+2) Generate a realistic recommendation list, taking into account where the person is and what is plausible to change there.
+3) Assess the overall risk level based everything you know. Note that a HIGH risk level means there are serious ergonomic problems that need urgent attention. So prefer MEDIUM unless there are multiple severe issues.
+
+Respond ONLY in this JSON format:
+
+{{
+  "observed_risks": [
+    {{
+      "body_region": "Neck",
+      "description": "Neck is often bent forward to look down at the phone while sitting on a park bench",
+      "severity": "LOW/MEDIUM/HIGH",
+      "confidence": "HIGH/MEDIUM/LOW"
+    }}
+  ],
+  "recommendations": [
+    "Hold the phone closer to eye level or rest your forearms on your thighs to raise the device instead of bending your neck deeply.",
+    "When at home or office, try to read or work at a table with back support rather than on a low bench.",
+    "Take a brief stretch break every 20–30 minutes to reset your neck and shoulders."
+  ], 
+  "overall_risk_level": "LOW/MEDIUM/HIGH"
+}}
+"""
+
+    messages = [
+        SystemMessage(content=system_prompt),
+        HumanMessage(content=[
+            {
+                "type": "text",
+                "text": json.dumps({"flagged_risks": risks_for_llm}, ensure_ascii=False)
+            }
+        ]),
+    ]
+
+    response = llm.invoke(messages)
+    response_text = response.content.strip()
+    if "```json" in response_text:
+        response_text = response_text.split("```json")[1].split("```")[0]
+    elif "```" in response_text:
+        response_text = response_text.split("```")[1].split("```")[0]
+
+    try:
+        parsed = json.loads(response_text)
+    except json.JSONDecodeError as e:
+        print(f"⚠️ Failed to parse recommender JSON: {e}")
+        print(f"Response: {response.content[:200]}...")
+        # Fallback: simple deterministic behaviour
+        parsed = {
+            "observed_risks": [
+                {
+                    "body_region": r.get("body_region", "General"),
+                    "description": r.get("cue", "Postural issue"),
+                    "severity": "MEDIUM",
+                    "confidence": r.get("confidence", "MEDIUM"),
+                }
+                for r in flagged_risks
+            ],
+            "recommendations": [
+                "Some ergonomic risks were detected, but the recommender could not generate detailed suggestions."
+            ],
+            "overall_risk_level": "UNDETERMINED",
+        }
+
+    state["recommendations"] = [parsed]
+    state["messages"].append(f"Generated LLM-based recommendations for {len(flagged_risks)} risks")
+    state["overall_risk_level"] = parsed.get("overall_risk_level", "UNDETERMINED")
     print("✅ Recommendations generated successfully")
-    
+
     return state
