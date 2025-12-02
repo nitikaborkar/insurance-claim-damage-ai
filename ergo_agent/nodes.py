@@ -135,12 +135,16 @@ You MUST:
 1) Pick ONE activity category from this list:
 {categories_list}
 
-2) Briefly describe the overall environment/context in 1 short sentence:
+2) Provide a SHORT descriptive title of the activity being performed. 
+Examples: "Working at desk", "Lifting box from floor", "Cooking at kitchen counter". Keep it concise (3-4 words).
+
+3) Briefly describe the overall environment/context in 1 short sentence:
    - Examples: "indoor office with desk and laptop", "outdoor park bench", "home living room sofa", "factory floor with boxes", "public transport seat".
 
 Respond ONLY in this JSON format:
 {{
   "activity_category": "exact category name or OTHERS",
+  "activity_title": "short descriptive title of the activity",
   "scene_context": "short description of where and how the person is situated"
 }}
 """
@@ -191,6 +195,7 @@ Respond ONLY in this JSON format:
         parsed = {"activity_category": "OTHERS", "scene_context": "unspecified environment"}
 
     activity_category = parsed.get("activity_category", "OTHERS").strip()
+    activity_title = parsed.get("activity_title", "").strip() or "unspecified activity"
     scene_context = parsed.get("scene_context", "unspecified environment").strip()
 
     # existing validation logic for activity_category…
@@ -213,7 +218,8 @@ Respond ONLY in this JSON format:
         print(f"✅ Activity classified as: {activity_category}")
 
     state["activity_category"] = activity_category
-    state["scene_context"] = scene_context   # NEW
+    state["activity_title"] = activity_title
+    state["scene_context"] = scene_context  
     state["messages"].append(f"Classified activity: {activity_category}; context: {scene_context}")
 
     return state

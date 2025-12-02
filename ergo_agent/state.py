@@ -26,6 +26,7 @@ class AgentState(TypedDict):
     image_base64: str
     image_path: str
     activity_category: str
+    activity_title: str
     scene_context: str
     relevant_checks: List[Dict]
     risk_analysis: List[Dict]

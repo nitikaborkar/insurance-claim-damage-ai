@@ -11,6 +11,7 @@ def analyze_image_path(image_path: str) -> dict:
         "image_base64": image_base64,
         "image_path": image_path,
         "activity_category": "",
+        "activity_title": "",
         "scene_context": "",
         "relevant_checks": [],
         "risk_analysis": [],
@@ -30,6 +31,7 @@ def analyze_image_path(image_path: str) -> dict:
         return {
             "image_path": image_path,
             "activity_category": final_state.get("activity_category", ""),
+            "activity_title": final_state.get("activity_title", ""),
             "scene_context": final_state.get("scene_context", ""),
             "skipped": True,
             "skip_reason": fr.get("reason", "Image not suitable for ergonomic assessment."),
@@ -43,6 +45,7 @@ def analyze_image_path(image_path: str) -> dict:
     return {
             "image_path": image_path,
             "activity_category": final_state["activity_category"],
+            "activity_title": final_state["activity_title"],
             "scene_context": final_state.get("scene_context", ""),
             "skipped": False,
             "skip_reason": None,
