@@ -1,3 +1,5 @@
+import ergo_agent.config 
+from ergo_agent.config import VALID_API_KEYS  # Import validated keys
 from flask import Flask, request, jsonify
 import tempfile
 import os
@@ -11,22 +13,11 @@ from ergo_agent.service import analyze_image_path
 from flask_limiter import Limiter
 from flask_cors import CORS
 from flask_limiter.util import get_remote_address
-import ergo_agent.config 
 import secrets
 import hashlib
 from functools import wraps
 
-# ============ API Key Management ============
-
-VALID_API_KEYS = set(
-    key.strip() 
-    for key in os.getenv("API_KEYS", "").split(",") 
-    if key.strip()
-)
-
-if not VALID_API_KEYS:
-    print("⚠️  WARNING: No API keys configured!")
-    print("   Set API_KEYS in .env or all requests will be rejected")
+# ============ API Key Management ============s
 
 def require_api_key(f):
     """Decorator to require API key authentication"""
@@ -159,9 +150,8 @@ def setup_logging(app):
     """Configure production logging"""
     if not app.debug:
         # Create logs directory if it doesn't exist
-        if not os.path.exists('logs'):
-            os.mkdir('logs')
-        
+        os.makedirs('logs', exist_ok=True)
+
         # File handler with rotation
         file_handler = RotatingFileHandler(
             'logs/app.log',
