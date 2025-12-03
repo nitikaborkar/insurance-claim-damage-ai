@@ -13,16 +13,68 @@ from flask_cors import CORS
 from flask_limiter.util import get_remote_address
 import ergo_agent.config 
 
+import hashlib
+from functools import wraps
+
+# ============ API Key Management ============
+
+VALID_API_KEYS = set(
+    key.strip() 
+    for key in os.getenv("VALID_API_KEYS", "").split(",") 
+    if key.strip()
+)
+
+if not VALID_API_KEYS:
+    print("⚠️  WARNING: No API keys configured!")
+    print("   Set VALID_API_KEYS in .env or all requests will be rejected")
+
+def require_api_key(f):
+    """Decorator to require API key authentication"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        api_key = request.headers.get("X-API-Key")
+        
+        if not api_key:
+            return jsonify({
+                "error": "Authentication required",
+                "message": "Missing X-API-Key header"
+            }), 401
+        
+        if api_key not in VALID_API_KEYS:
+            return jsonify({
+                "error": "Authentication failed",
+                "message": "Invalid API key"
+            }), 401
+        
+        # Store hashed version for logging/rate limiting
+        key_hash = hashlib.sha256(api_key.encode()).hexdigest()
+        request.authenticated_user = key_hash[:16]
+        
+        return f(*args, **kwargs)
+    
+    return decorated_function
+
 def get_user_identifier():
-    """Extract user identifier for rate limiting."""
+    """
+    Extract user identifier for rate limiting.
+    Uses hashed API key to avoid exposing keys in logs/storage.
+    """
+    # Prefer authenticated user (already hashed in decorator)
     if hasattr(request, 'authenticated_user'):
-        return f"user:{request.authenticated_user}"
+        return f"key:{request.authenticated_user}"
     
-    api_key = request.headers.get("Authorization", "").replace("Bearer ", "")
-    if api_key and len(api_key) > 16:
-        return f"key:{api_key[:16]}"
+    # Check headers for unauthenticated attempts
+    api_key = request.headers.get("X-API-Key") or \
+              request.headers.get("Authorization", "").replace("Bearer ", "").strip()
     
+    if api_key:
+        key_hash = hashlib.sha256(api_key.encode()).hexdigest()
+        return f"key:{key_hash[:16]}"
+    
+    # Fallback to IP
     return f"ip:{get_remote_address()}"
+
+
 
 #later implementation for user key extraction
 # def get_user_key():
