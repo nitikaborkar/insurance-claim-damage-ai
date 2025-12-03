@@ -1,20 +1,27 @@
-*.ipynb
+# Secrets
+.env
+.env.*
+!.env.example
 
-# Ignore all .log files
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
 *.log
 
-# Ignore only in repo root
-/.env
-/.DS_Store
-
+# OS
+.DS_Store
+Thumbs.db
 ergonomic_assessment_results_with_version_3.json
 
 # Virtual environment
 .venv/
 
 testing_images/.DS_Store
-
-__pycache__/
-*.pyc
-*.pyo
-*.pyd

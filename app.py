@@ -1,3 +1,14 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Load .env but never commit it
+
+# Validate required secrets at startup
+required_vars = ["ANTHROPIC_API_KEY", "LANGCHAIN_API_KEY"]
+missing = [var for var in required_vars if not os.getenv(var)]
+if missing:
+    raise RuntimeError(f"Missing required environment variables: {', '.join(missing)}")
+
 from flask import Flask, request, jsonify
 import tempfile
 from ergo_agent.service import analyze_image_path
