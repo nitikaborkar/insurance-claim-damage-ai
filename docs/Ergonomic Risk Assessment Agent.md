@@ -78,10 +78,11 @@ You should see:
 
 ### Single image via `curl`
 
-```bash
+Replace api_key with your actual API key from .env
+```bash 
 curl -X POST http://127.0.0.1:8000/analyze \
-  -F "image=@/absolute/path/to/image.jpg" \
-  -H "Accept: application/json"
+  -H "X-API-Key: your_api_key_here" \
+  -F "image=@/absolute/path/to/image.jpg"
 ```
 
 You should get a JSON response like:
