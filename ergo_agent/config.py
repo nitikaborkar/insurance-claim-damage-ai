@@ -7,6 +7,7 @@ load_dotenv()
 # Read secrets from environment
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 LANGCHAIN_API_KEY = os.getenv("LANGCHAIN_API_KEY")
+API_KEYS = os.getenv("API_KEYS", "").split(",")
 
 # Validate required secrets
 if not ANTHROPIC_API_KEY:
@@ -21,8 +22,15 @@ if not LANGCHAIN_API_KEY:
         "Copy .env.example to .env and add your API key."
     )
 
+if not API_KEYS or all(not key.strip() for key in API_KEYS):
+    raise RuntimeError(
+        "No API keys configured. "
+        "Set API_KEYS in .env to a comma-separated list of valid keys."
+    )
+
 # Set environment variables for downstream libraries
 os.environ["ANTHROPIC_API_KEY"] = ANTHROPIC_API_KEY
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_PROJECT"] = "ergonomic-risk-assessment"
 os.environ["LANGCHAIN_API_KEY"] = LANGCHAIN_API_KEY
+os.environ["API_KEYS"] = ",".join(API_KEYS)

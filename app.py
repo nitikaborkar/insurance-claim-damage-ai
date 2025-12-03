@@ -12,7 +12,7 @@ from flask_limiter import Limiter
 from flask_cors import CORS
 from flask_limiter.util import get_remote_address
 import ergo_agent.config 
-
+import secrets
 import hashlib
 from functools import wraps
 
@@ -20,13 +20,13 @@ from functools import wraps
 
 VALID_API_KEYS = set(
     key.strip() 
-    for key in os.getenv("VALID_API_KEYS", "").split(",") 
+    for key in os.getenv("API_KEYS", "").split(",") 
     if key.strip()
 )
 
 if not VALID_API_KEYS:
     print("⚠️  WARNING: No API keys configured!")
-    print("   Set VALID_API_KEYS in .env or all requests will be rejected")
+    print("   Set API_KEYS in .env or all requests will be rejected")
 
 def require_api_key(f):
     """Decorator to require API key authentication"""
@@ -40,7 +40,8 @@ def require_api_key(f):
                 "message": "Missing X-API-Key header"
             }), 401
         
-        if api_key not in VALID_API_KEYS:
+        # Use constant-time comparison to prevent timing attacks
+        if not any(secrets.compare_digest(api_key, valid_key) for valid_key in VALID_API_KEYS):
             return jsonify({
                 "error": "Authentication failed",
                 "message": "Invalid API key"
@@ -53,6 +54,7 @@ def require_api_key(f):
         return f(*args, **kwargs)
     
     return decorated_function
+
 
 def get_user_identifier():
     """
@@ -180,6 +182,7 @@ def setup_logging(app):
 # ============ Routes ============
 
 @app.route("/analyze", methods=["POST"])
+@require_api_key 
 @limiter.limit(
     "50 per day;20 per hour;10 per 10 minutes",
     error_message="Rate limit exceeded. Please try again later."

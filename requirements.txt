@@ -9,7 +9,5 @@ pillow
 flask-limiter 
 flask_cors
 Werkzeug
-marshmallow
 filetype
 waitress
-hashlib
