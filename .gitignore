@@ -8,6 +8,8 @@ __pycache__/
 *.pyc
 *.pyo
 *.egg-info/
+ergo_agent/__pycache__
+
 
 # IDE
 .vscode/

@@ -11,6 +11,7 @@ from ergo_agent.service import analyze_image_path
 from flask_limiter import Limiter
 from flask_cors import CORS
 from flask_limiter.util import get_remote_address
+import ergo_agent.config 
 
 def get_user_identifier():
     """Extract user identifier for rate limiting."""
@@ -39,8 +40,9 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10MB
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'}
 
+CORS_ORIGINS = os.getenv("CORS_ORIGINS", "https://staging-personal.balanceflo.ai").split(",")
 CORS(app, resources={r"/analyze": {
-    "origins": ["https://staging-personal.balanceflo.ai"]
+    "origins": CORS_ORIGINS
 }})
 
 # Rate limiting
@@ -161,8 +163,6 @@ def analyze():
     
     image_type = kind.extension
 
-    # Create safe temp file
-    safe_filename = secure_filename(file.filename)
     tmp_path = None
     
     try:
