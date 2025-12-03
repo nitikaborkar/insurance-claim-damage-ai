@@ -109,7 +109,7 @@ You should get a JSON response like:
   ]
 }
 ```
-
+Note : For invalid images skipped will be true and skip_reason will show why it was invalid
 
 ### Batch testing in a notebook (without HTTP)
 
