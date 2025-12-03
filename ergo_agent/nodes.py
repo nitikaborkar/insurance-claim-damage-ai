@@ -1,13 +1,43 @@
+# ergo_agent/nodes.py
+import os
+from dotenv import load_dotenv
+
+# Load environment variables immediately
+load_dotenv()
+
 from langchain_core.messages import HumanMessage, SystemMessage
 from ergo_agent.state import AgentState, ERGONOMIC_DATA, ACTIVITY_CATEGORIES
 import json
-
 from langchain_anthropic import ChatAnthropic
 
-def make_model(model_name: str = "claude-sonnet-4-20250514"):
-    # basic built-in retries for transient failures
-    base = ChatAnthropic(model=model_name, temperature=0, max_retries=3)
-    return base
+
+def make_model(model_name: str = "claude-sonnet-4-20250514", timeout: int = 60):
+    """
+    Create Anthropic model with retries and timeout.
+    
+    Args:
+        model_name: Anthropic model identifier
+        timeout: Request timeout in seconds
+    
+    Returns:
+        Configured ChatAnthropic instance
+    """
+    api_key = os.getenv("ANTHROPIC_API_KEY")
+    if not api_key:
+        raise RuntimeError(
+            "ANTHROPIC_API_KEY not found in environment. "
+            "Make sure .env file exists and is loaded."
+        )
+    
+    return ChatAnthropic(
+        model=model_name,
+        temperature=0,
+        max_retries=3,
+        timeout=timeout,
+        max_tokens=4096,
+        anthropic_api_key=api_key,  # Explicitly pass the key
+    )
+
 
 
 def general_ergonomic_analysis(state: AgentState) -> AgentState:
@@ -74,18 +104,17 @@ Only include risks you can actually see in the image. Be thorough but accurate."
         ])
     ]
 
-    llm = make_model("claude-sonnet-4-20250514")
+    llm = make_model("claude-sonnet-4-20250514", timeout=60)
 
     try:
         response = llm.invoke(messages)
     except Exception as e:
         print(f"⚠️ General analysis: primary model failed: {e}")
         try:
-            llm_fallback = make_model("claude-haiku-3-20241022")
+            llm_fallback = make_model("claude-haiku-3-20241022", timeout=30)
             response = llm_fallback.invoke(messages)
         except Exception as e2:
             print(f"🛑 General analysis: fallback model also failed: {e2}")
-            # safe fallback
             state["risk_analysis"] = []
             state["flagged_risks"] = []
             state["messages"].append("General analysis failed due to model errors")
@@ -97,7 +126,7 @@ Only include risks you can actually see in the image. Be thorough but accurate."
         if "```json" in response_text:
             response_text = response_text.split("```json")[1].split("```")[0]
         elif "```" in response_text:
-            response_text = response_text.split("``````")[0]
+            response_text = response_text.split("```")[0]
 
         analysis_result = json.loads(response_text)
         risk_analysis = analysis_result.get("risk_analysis", [])
@@ -105,11 +134,16 @@ Only include risks you can actually see in the image. Be thorough but accurate."
         print(f"⚠️ General analysis: failed to parse JSON: {e}")
         risk_analysis = []
 
-    
     state["risk_analysis"] = risk_analysis
     
     # Filter flagged risks (present = True)
     flagged_risks = [r for r in risk_analysis if r.get("present", False)]
+    # Sort by confidence: HIGH → MEDIUM → LOW
+    confidence_order = {"HIGH": 0, "MEDIUM": 1, "LOW": 2}
+    flagged_risks.sort(
+        key=lambda r: confidence_order.get(r.get("confidence", "LOW"), 3)
+    )
+
     state["flagged_risks"] = flagged_risks
     
     print(f"✅ General analysis complete: {len(flagged_risks)} risks identified")
@@ -120,11 +154,10 @@ Only include risks you can actually see in the image. Be thorough but accurate."
     
     return state
 
+
 def activity_classifier_node(state: AgentState) -> AgentState:
     print("\n🔍 AGENT 1: Activity Classifier")
     print("=" * 60)
-
-    llm = make_model("claude-sonnet-4-20250514")
 
     categories_list = "\n".join([f"- {cat}" for cat in ACTIVITY_CATEGORIES])
 
@@ -156,7 +189,7 @@ Respond ONLY in this JSON format:
                 "type": "image",
                 "source": {
                     "type": "base64",
-                    "media_type": "image/jpeg",  # if you always send JPEG
+                    "media_type": "image/jpeg",
                     "data": state["image_base64"],
                 },
             },
@@ -164,41 +197,47 @@ Respond ONLY in this JSON format:
                 "type": "text",
                 "text": "Classify the primary activity being performed in this image and describe the scene context.",
             },
-        ]),]
+        ]),
+    ]
+    
+    llm = make_model("claude-sonnet-4-20250514", timeout=45)
     
     try:
         response = llm.invoke(messages)
     except Exception as e:
         print(f"⚠️ Activity classifier: primary model failed: {e}")
         try:
-            llm_fallback = make_model("claude-haiku-3-20241022")
+            llm_fallback = make_model("claude-haiku-3-20241022", timeout=30)
             response = llm_fallback.invoke(messages)
         except Exception as e2:
             print(f"🛑 Activity classifier: fallback model also failed: {e2}")
-            # safe fallback for classifier ONLY
             state["activity_category"] = "OTHERS"
+            state["activity_title"] = "unspecified activity"
             state["scene_context"] = "unspecified environment"
             state["messages"].append("Activity classifier failed; defaulting to OTHERS")
             return state
 
-       
     response_text = response.content.strip()
     if "```json" in response_text:
         response_text = response_text.split("```json")[1].split("```")[0]
     elif "```" in response_text:
-        response_text = response_text.split("```")[1].split("```")[0]
+        response_text = response_text.split("```")[0]
 
     try:
         parsed = json.loads(response_text)
     except json.JSONDecodeError:
         print("⚠️ Failed to parse classifier JSON, defaulting to OTHERS.")
-        parsed = {"activity_category": "OTHERS", "scene_context": "unspecified environment"}
+        parsed = {
+            "activity_category": "OTHERS",
+            "activity_title": "unspecified activity",
+            "scene_context": "unspecified environment"
+        }
 
     activity_category = parsed.get("activity_category", "OTHERS").strip()
     activity_title = parsed.get("activity_title", "").strip() or "unspecified activity"
     scene_context = parsed.get("scene_context", "unspecified environment").strip()
 
-    # existing validation logic for activity_category…
+    # Validate activity_category
     if activity_category == "OTHERS":
         print(f"✅ Activity classified as: OTHERS (will use general analysis)")
     elif activity_category not in ACTIVITY_CATEGORIES:
@@ -220,9 +259,10 @@ Respond ONLY in this JSON format:
     state["activity_category"] = activity_category
     state["activity_title"] = activity_title
     state["scene_context"] = scene_context  
-    state["messages"].append(f"Classified activity: {activity_category}; context: {scene_context}")
+    state["messages"].append(f"Classified activity: {activity_category}; title: {activity_title}")
 
     return state
+
 
 def filterer_node(state: AgentState) -> AgentState:
     """
@@ -231,80 +271,77 @@ def filterer_node(state: AgentState) -> AgentState:
     print("\n🔍 AGENT: Filterer")
     print("=" * 60)
 
-    # Get relevant checks for this activity
-
     system_prompt = f"""
-    You are an ergonomic activity filterer. Your job is to decide whether an input image
-    is suitable for meaningful ergonomic assessment for the activity category:
-    `{state["activity_category"]}`.
+You are an ergonomic activity filterer. Your job is to decide whether an input image
+is suitable for meaningful ergonomic assessment for the activity category:
+`{state["activity_category"]}`.
 
-    You MUST classify the image into one of two labels:
-    - "VALID"      → ergonomic assessment CAN be performed
-    - "INVALID"    → ergonomic assessment SHOULD BE SKIPPED
+You MUST classify the image into one of two labels:
+- "VALID"      → ergonomic assessment CAN be performed
+- "INVALID"    → ergonomic assessment SHOULD BE SKIPPED
 
-    General rules:
-    1. Only assess REAL humans in REAL photos or videos.
-    - Reject cartoons, illustrations, avatars, CGI renders, stick figures, or mannequin images.
-    2. The activity must be a meaningful, sustained task where posture is held or repeated
-    long enough to create ergonomic risk (e.g., desk work, lifting, cooking, cleaning).
-    - Reject short, transient or incidental actions such as:
-        - quickly glancing at a watch.
-        - casual posing for a photo or stretching for a second
-    3. The person’s posture and work setup must be visible enough to judge ergonomics.
-    - Reject images where:
-        - most of the body is out of frame or heavily occluded
-        - the key working limb or tool is completely hidden
-        - the scene is too dark, blurry, or distant to see posture clearly.
-    4. If the image shows a mobility aid (wheelchair, walking stick, crutches, walker),
-    it is STILL VALID as long as:
-    - the person is clearly performing a real task (e.g., typing, cooking, reaching, pushing, texting, scrolling, lifting)
-    - the posture and relationship to the workstation/equipment can be seen.
-    - the person is engaging in a common activity (eg: carrying items, backpack, luggage) that could be analyzed ergonomically.
-    - the person is exercising (eg: lifting weights, doing yoga, running, walking) where posture and setup can be judged.
-    5. If the scene is ambiguous and you cannot reliably infer what task is being performed,
-    treat it as INVALID.
+General rules:
+1. Only assess REAL humans in REAL photos or videos.
+- Reject cartoons, illustrations, avatars, CGI renders, stick figures, or mannequin images.
+2. The activity must be a meaningful, sustained task where posture is held or repeated
+long enough to create ergonomic risk (e.g., desk work, lifting, cooking, cleaning).
+- Reject short, transient or incidental actions such as:
+    - quickly glancing at a watch.
+    - casual posing for a photo or stretching for a second
+3. The person's posture and work setup must be visible enough to judge ergonomics.
+- Reject images where:
+    - most of the body is out of frame or heavily occluded
+    - the key working limb or tool is completely hidden
+    - the scene is too dark, blurry, or distant to see posture clearly.
+4. If the image shows a mobility aid (wheelchair, walking stick, crutches, walker),
+it is STILL VALID as long as:
+- the person is clearly performing a real task (e.g., typing, cooking, reaching, pushing, texting, scrolling, lifting)
+- the posture and relationship to the workstation/equipment can be seen.
+- the person is engaging in a common activity (eg: carrying items, backpack, luggage) that could be analyzed ergonomically.
+- the person is exercising (eg: lifting weights, doing yoga, running, walking) where posture and setup can be judged.
+5. If the scene is ambiguous and you cannot reliably infer what task is being performed,
+treat it as INVALID.
 
-    Think step by step about:
-    - Is this a real human?
-    - Is this a sustained, ergonomically relevant activity?
-    - Can posture and setup be seen clearly enough to judge risk?
+Think step by step about:
+- Is this a real human?
+- Is this a sustained, ergonomically relevant activity?
+- Can posture and setup be seen clearly enough to judge risk?
 
-    Respond ONLY in this strict JSON format:
+Respond ONLY in this strict JSON format:
 
-    {{
-    "validity": "VALID" or "INVALID",
-    "reason": "one-sentence explanation",
-    "notes_for_downstream": "any hints for later ergonomic analysis, or empty string"
-    }}
-    """
-
+{{
+"validity": "VALID" or "INVALID",
+"reason": "one-sentence explanation",
+"notes_for_downstream": "any hints for later ergonomic analysis, or empty string"
+}}
+"""
 
     messages = [
-    SystemMessage(content=system_prompt),
-    HumanMessage(content=[
-        {
-            "type": "image",
-            "source": {
-                "type": "base64",
-                "media_type": "image/jpeg",
-                "data": state["image_base64"],
+        SystemMessage(content=system_prompt),
+        HumanMessage(content=[
+            {
+                "type": "image",
+                "source": {
+                    "type": "base64",
+                    "media_type": "image/jpeg",
+                    "data": state["image_base64"],
+                },
             },
-        },
-        {
-            "type": "text",
-            "text": "Decide if this image is VALID or INVALID for ergonomic assessment using the rules.",
-        },
-    ]),
+            {
+                "type": "text",
+                "text": "Decide if this image is VALID or INVALID for ergonomic assessment using the rules.",
+            },
+        ]),
     ]
 
-    llm = make_model("claude-sonnet-4-20250514")
+    llm = make_model("claude-sonnet-4-20250514", timeout=45)
 
     try:
         response = llm.invoke(messages)
     except Exception as e:
         print(f"⚠️ Filterer: primary model failed: {e}")
         try:
-            llm_fallback = make_model("claude-haiku-3-20241022")
+            llm_fallback = make_model("claude-haiku-3-20241022", timeout=30)
             response = llm_fallback.invoke(messages)
         except Exception as e2:
             print(f"🛑 Filterer failed: {e2}")
@@ -321,7 +358,7 @@ def filterer_node(state: AgentState) -> AgentState:
     if "```json" in response_text:
         response_text = response_text.split("```json")[1].split("```")[0]
     elif "```" in response_text:
-        response_text = response_text.split("``````")[0]
+        response_text = response_text.split("```")[0]
 
     try:
         result = json.loads(response_text)
@@ -353,7 +390,6 @@ def filterer_node(state: AgentState) -> AgentState:
     return state
 
 
-
 def risk_analyzer_node(state: AgentState) -> AgentState:
     """
     Agent 3: Analyze risks based on the activity category
@@ -361,9 +397,6 @@ def risk_analyzer_node(state: AgentState) -> AgentState:
     """
     print("\n🔬 AGENT 3: Risk Analyzer")
     print("=" * 60)
-    
-    llm = make_model("claude-sonnet-4-20250514")
-
     
     # Get relevant checks for this activity
     activity_category = state["activity_category"]
@@ -441,7 +474,6 @@ Respond ONLY in this JSON format:
 }}
 """
 
-
     messages = [
         SystemMessage(content=system_prompt),
         HumanMessage(content=[
@@ -460,12 +492,14 @@ Respond ONLY in this JSON format:
         ])
     ]
     
+    llm = make_model("claude-sonnet-4-20250514", timeout=60)
+    
     try:
         response = llm.invoke(messages)
     except Exception as e:
         print(f"⚠️ Risk analyzer: primary model failed: {e}")
         try:
-            llm_fallback = make_model("claude-haiku-3-20241022")
+            llm_fallback = make_model("claude-haiku-3-20241022", timeout=30)
             response = llm_fallback.invoke(messages)
         except Exception as e2:
             print(f"🛑 Risk analyzer: fallback model also failed: {e2}")
@@ -474,16 +508,14 @@ Respond ONLY in this JSON format:
             state["messages"].append("Risk analyzer failed due to model errors")
             return state
 
-    
     # Parse the response
     try:
-        # Extract JSON from response (handle markdown code blocks)
         response_text = response.content.strip()
         if "```json" in response_text:
             response_text = response_text.split("```json")[1].split("```")[0]
         elif "```" in response_text:
-            response_text = response_text.split("```")[1].split("```")[0]
-        
+            response_text = response_text.split("```")[0]
+
         analysis_result = json.loads(response_text)
         risk_analysis = analysis_result.get("risk_analysis", [])
     except json.JSONDecodeError as e:
@@ -505,7 +537,14 @@ Respond ONLY in this JSON format:
     
     # Filter flagged risks (present = True)
     flagged_risks = [r for r in risk_analysis if r.get("present", False)]
-    state["flagged_risks"] = flagged_risks
+    # Sort by confidence: HIGH → MEDIUM → LOW
+    confidence_order = {"HIGH": 0, "MEDIUM": 1, "LOW": 2}
+    flagged_risks.sort(
+        key=lambda r: confidence_order.get(r.get("confidence", "LOW"), 3)
+    )
+
+    state["flagged_risks"] = flagged_risks   
+
     
     print(f"✅ Analysis complete: {len(flagged_risks)} risks flagged out of {len(risk_analysis)} checks")
     for risk in flagged_risks:
@@ -552,7 +591,7 @@ def recommender_node(state: AgentState) -> AgentState:
             "example_long_term_practice": r.get("long_term_practice"),
         })
 
-    llm = make_model("claude-sonnet-4-20250514")
+    llm = make_model("claude-sonnet-4-20250514", timeout=60)
 
     system_prompt = f"""
 You are an ergonomist writing a concise, practical report.
@@ -625,12 +664,41 @@ Respond ONLY in this JSON format:
         ]),
     ]
 
-    response = llm.invoke(messages)
+    try:
+        response = llm.invoke(messages)
+    except Exception as e:
+        print(f"⚠️ Recommender: primary model failed: {e}")
+        try:
+            llm_fallback = make_model("claude-haiku-3-20241022", timeout=30)
+            response = llm_fallback.invoke(messages)
+        except Exception as e2:
+            print(f"🛑 Recommender: fallback model also failed: {e2}")
+            # Fallback response
+            parsed = {
+                "observed_risks": [
+                    {
+                        "body_region": r.get("body_region", "General"),
+                        "description": r.get("cue", "Postural issue"),
+                        "severity": "MEDIUM",
+                        "confidence": r.get("confidence", "MEDIUM"),
+                    }
+                    for r in flagged_risks
+                ],
+                "recommendations": [
+                    "Some ergonomic risks were detected, but the recommender could not generate detailed suggestions."
+                ],
+                "overall_risk_level": "UNDETERMINED",
+            }
+            state["recommendations"] = [parsed]
+            state["messages"].append("Recommender failed; returning basic fallback")
+            state["overall_risk_level"] = "UNDETERMINED"
+            return state
+    
     response_text = response.content.strip()
     if "```json" in response_text:
         response_text = response_text.split("```json")[1].split("```")[0]
     elif "```" in response_text:
-        response_text = response_text.split("```")[1].split("```")[0]
+        response_text = response_text.split("```")[0]
 
     try:
         parsed = json.loads(response_text)

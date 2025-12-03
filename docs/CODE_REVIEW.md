@@ -16,7 +16,7 @@ This document provides a detailed security and code quality review of the Ergono
 
 ## Critical Security Issues
 
-### 🔴 **CRITICAL-1: Secrets Exposed in Version Control**
+### 🔴 **CRITICAL-1: Secrets Exposed in Version Control** -- ✅
 **Location:** `.env` file in repository root
 **Severity:** CRITICAL
 **Current State:** API keys are committed to git repository
@@ -38,7 +38,7 @@ While `.env` is in `.gitignore`, **it's already been committed** (visible via `l
 
 **Solution:**
 
-1. **IMMEDIATE ACTION - Revoke exposed keys:**
+1. **IMMEDIATE ACTION - Revoke exposed keys:** 
    ```bash
    # Visit these URLs to rotate keys:
    # Anthropic: https://console.anthropic.com/settings/keys
@@ -91,7 +91,7 @@ While `.env` is in `.gitignore`, **it's already been committed** (visible via `l
 
 ## High Severity Issues
 
-### 🔴 **HIGH-1: Missing Authentication on `/analyze` Endpoint**
+### 🔴 **HIGH-1: Missing Authentication on `/analyze` Endpoint** -- TODO
 **Location:** [app.py:29-45](app.py#L29-L45)
 **Severity:** HIGH
 **CVSS Score:** 8.1 (High)
@@ -193,7 +193,7 @@ Start with **Option A** (API Key) for immediate protection, migrate to **Option 
 
 ---
 
-### 🔴 **HIGH-2: Production Server Running in Debug Mode**
+### 🔴 **HIGH-2: Production Server Running in Debug Mode** -- ✅
 **Location:** [app.py:47-48](app.py#L47-L48)
 **Severity:** HIGH
 
@@ -285,7 +285,7 @@ curl -X POST http://your-server:8000/analyze
 
 ---
 
-### 🔴 **HIGH-3: Unsafe File Upload Handling**
+### 🔴 **HIGH-3: Unsafe File Upload Handling** -- ✅
 **Location:** [app.py:40-42](app.py#L40-L42), [ergo_agent/state.py:45-66](ergo_agent/state.py#L45-L66)
 **Severity:** HIGH
 
@@ -504,7 +504,7 @@ def load_and_compress(image_path, max_size_kb=4800):
 
 ## Medium Severity Issues
 
-### 🟡 **MEDIUM-1: Weak Rate Limiting Implementation**
+### 🟡 **MEDIUM-1: Weak Rate Limiting Implementation** -- TODO
 **Location:** [app.py:8-10, 23-30](app.py#L8-L30)
 **Severity:** MEDIUM
 
@@ -597,7 +597,7 @@ limiter = Limiter(
 
 ---
 
-### 🟡 **MEDIUM-2: Unpinned Dependencies**
+### 🟡 **MEDIUM-2: Unpinned Dependencies** -- NOT DONE FOR NOW
 **Location:** [requirements.txt](requirements.txt)
 **Severity:** MEDIUM
 
@@ -696,7 +696,7 @@ Pillow <10.3.0 had CVE-2024-28219 (arbitrary code execution)
 
 ---
 
-### 🟡 **MEDIUM-3: Missing Error Handling in Service Layer**
+### 🟡 **MEDIUM-3: Missing Error Handling in Service Layer** -- ✅
 **Location:** [ergo_agent/service.py:44](ergo_agent/service.py#L44)
 **Severity:** MEDIUM
 
@@ -819,7 +819,7 @@ def analyze_image_path(image_path: str) -> dict:
 
 ## Low Severity Issues
 
-### 🟢 **LOW-1: Secrets Validation Not Centralized**
+### 🟢 **LOW-1: Secrets Validation Not Centralized** -- ✅ (centralised in config.py)
 **Location:** [ergo_agent/config.py](ergo_agent/config.py), [app.py](app.py)
 **Severity:** LOW
 
@@ -866,7 +866,7 @@ from flask import Flask, request, jsonify
 
 ---
 
-### 🟢 **LOW-2: Missing Data File Validation**
+### 🟢 **LOW-2: Missing Data File Validation** 
 **Location:** [ergo_agent/state.py:14-18](ergo_agent/state.py#L14-L18)
 **Severity:** LOW
 
@@ -936,7 +936,7 @@ except Exception as e:
 
 ---
 
-### 🟢 **LOW-3: Insufficient Logging**
+### 🟢 **LOW-3: Insufficient Logging** -- ✅
 **Location:** Throughout application
 **Severity:** LOW
 
@@ -1037,7 +1037,7 @@ app.logger.info(f"[{request.id}] Analysis started")
 
 ---
 
-### 📘 **BP-2: Add Health Check Endpoint**
+### 📘 **BP-2: Add Health Check Endpoint** -- ✅
 
 **Benefit:** Load balancer monitoring, Kubernetes readiness probes
 
@@ -1070,7 +1070,7 @@ def readiness_check():
 
 ---
 
-### 📘 **BP-3: Add Input Validation Schema**
+### 📘 **BP-3: Add Input Validation Schema** -- ✅
 
 **Benefit:** Catch bad requests early, better error messages
 
@@ -1096,7 +1096,7 @@ def analyze():
 
 ---
 
-### 📘 **BP-4: Add Timeouts to LLM Calls**
+### 📘 **BP-4: Add Timeouts to LLM Calls** -- ✅
 
 **Benefit:** Prevent hung requests, better resource utilization
 
@@ -1121,7 +1121,7 @@ llm_fallback = make_model("claude-haiku-3-20241022", timeout=30)
 
 ---
 
-### 📘 **BP-5: Add Prometheus Metrics**
+### 📘 **BP-5: Add Prometheus Metrics** 
 
 **Benefit:** Production observability, performance monitoring
 
