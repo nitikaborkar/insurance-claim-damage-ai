@@ -9,7 +9,6 @@ __pycache__/
 *.pyo
 *.egg-info/
 ./ergo_agent/__pycache__
-./ergo_agent/__pycache__/*.pyc
 # IDE
 .vscode/
 .idea/
