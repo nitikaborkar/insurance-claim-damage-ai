@@ -21,6 +21,17 @@ with open("products.json", "r") as f:
 # Activity categories for classification
 ACTIVITY_CATEGORIES = list(ERGONOMIC_DATA.keys())
 
+# At module level, after PRODUCT_DATA is loaded
+PRODUCTS_CATALOG = [
+    {
+        "id": product.get("id"),
+        "name": product.get("name"),
+        "description": product.get("description"),
+        "category": product.get("category"),
+    }
+    for product in PRODUCT_DATA.get("ergonomic_products", [])
+]
+
 # ============================================================================
 # STATE DEFINITION
 # ============================================================================

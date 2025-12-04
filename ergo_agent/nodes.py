@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from langchain_core.messages import HumanMessage, SystemMessage
-from ergo_agent.state import AgentState, ERGONOMIC_DATA, ACTIVITY_CATEGORIES, PRODUCT_DATA
+from ergo_agent.state import AgentState, ERGONOMIC_DATA, ACTIVITY_CATEGORIES, PRODUCTS_CATALOG
 import json
 from langchain_anthropic import ChatAnthropic
 
@@ -776,16 +776,8 @@ def product_recommender_node(state: AgentState) -> AgentState:
         })
 
     # Create compact product catalog for LLM
-    products_catalog = []
-    products = PRODUCT_DATA.get("ergonomic_products", [])
-    for product in products:
-        products_catalog.append({
-            "id": product.get("id"),
-            "name": product.get("name"),
-            "description": product.get("description"),
-            "category": product.get("category")
-        })
-
+    products_catalog = PRODUCTS_CATALOG
+   
     llm = make_model("claude-sonnet-4-20250514", timeout=60)
 
     system_prompt = f"""You are an ergonomic product consultant who matches the right products to specific ergonomic problems.
