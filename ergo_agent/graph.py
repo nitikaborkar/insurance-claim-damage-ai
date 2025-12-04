@@ -5,6 +5,7 @@ from .nodes import (
     filterer_node,
     risk_analyzer_node,
     recommender_node,
+    product_recommender_node
 )
 
 def route_after_filter(state: AgentState) -> str:
@@ -16,13 +17,15 @@ def create_ergonomic_agent_graph():
     workflow.add_node("filterer", filterer_node)
     workflow.add_node("analyzer", risk_analyzer_node)
     workflow.add_node("recommender", recommender_node)
+    workflow.add_node("product_recommender", product_recommender_node)
 
     workflow.add_edge("classifier", "filterer")
     workflow.add_conditional_edges(
         "filterer", route_after_filter, {"analyzer": "analyzer", "__end__": END}
     )
     workflow.add_edge("analyzer", "recommender")
-    workflow.add_edge("recommender", END)
+    workflow.add_edge("recommender", "product_recommender")
+    workflow.add_edge("product_recommender", END)
 
     workflow.set_entry_point("classifier")
     

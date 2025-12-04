@@ -1,0 +1,124 @@
+{
+  "ergonomic_products": [
+    {
+      "id": 1,
+      "name": "Lumbar Support Cushion",
+      "description": "Provides firm support to the lower back, preventing the spine from collapsing into a C-shape when sitting on sofas, chairs, or in cars. Reduces lumbar disc pressure and promotes upright posture.",
+      "category": "seating_support"
+    },
+    {
+      "id": 2,
+      "name": "Adjustable Laptop Stand",
+      "description": "Raises laptop to eye level, reducing neck flexion and forward head posture in bed, sofa, desk, and floor setups. Minimizes neck strain and upper-back rounding.",
+      "category": "desk_accessories"
+    },
+    {
+      "id": 3,
+      "name": "Phone/Tablet Bed Stand",
+      "description": "Holds device at eye height, eliminating the need to look down sharply and preventing neck flexion and shoulder tension during bed or sofa use.",
+      "category": "device_accessories"
+    },
+    {
+      "id": 4,
+      "name": "Lap Desk With Cushion Base",
+      "description": "Provides a stable elevated surface for laptop or books while sitting on sofa or bed, reducing slouching, neck strain, and unsupported wrist angles.",
+      "category": "desk_accessories"
+    },
+    {
+      "id": 5,
+      "name": "Ergonomic Seat Cushion (Firm Foam)",
+      "description": "Elevates hips and reduces pelvis backward-rolling when sitting on soft surfaces or floor. Helps maintain neutral spine alignment and reduces lower back pain.",
+      "category": "seating_support"
+    },
+    {
+      "id": 6,
+      "name": "Footrest (Adjustable)",
+      "description": "Keeps feet flat and supported in sofa setups, at desks, or for elderly sitting. Improves hip/knee alignment and prevents lower-back strain from dangling legs.",
+      "category": "desk_accessories"
+    },
+    {
+      "id": 7,
+      "name": "Wrist Support Pillow (for phone/computer use)",
+      "description": "Supports elbows/forearms while holding devices or typing, preventing shoulder elevation and reducing wrist strain.",
+      "category": "device_accessories"
+    },
+    {
+      "id": 8,
+      "name": "Reading Book Stand (Adjustable Angle)",
+      "description": "Lifts books to eye level, decreasing neck flexion and upper-back slouching while studying in bed or on floor.",
+      "category": "desk_accessories"
+    },
+    {
+      "id": 9,
+      "name": "Memory Foam Neck Pillow (Firm, Contoured)",
+      "description": "Maintains neutral neck alignment when semi-reclining or watching TV in bed. Prevents chin-tilt and cervical discomfort.",
+      "category": "seating_support"
+    },
+    {
+      "id": 10,
+      "name": "Ergonomic Gaming Chair",
+      "description": "Provides full back and lumbar support, encouraging upright seated posture during long gaming sessions. Reduces neck/shoulder strain from leaning forward.",
+      "category": "seating_support"
+    },
+    {
+      "id": 11,
+      "name": "Monitor Riser / Stackable Riser Blocks",
+      "description": "Raises screen height on desks, consoles, or gaming setups to minimize forward head posture and slumping.",
+      "category": "desk_accessories"
+    },
+    {
+      "id": 12,
+      "name": "Anti-Fatigue Standing Mat",
+      "description": "Reduces leg and lower-back fatigue during kitchen prep, dishwashing, ironing, or standing tasks by improving load distribution in the feet and legs.",
+      "category": "standing_support"
+    },
+    {
+      "id": 13,
+      "name": "Knee Support Pad (for cleaning floor-level surfaces)",
+      "description": "Protects knees from pressure and helps maintain safer kneeling posture during chores, reducing knee strain.",
+      "category": "mobility_support"
+    },
+    {
+      "id": 14,
+      "name": "Ergonomic Steering Cushion",
+      "description": "Provides lumbar and pelvic support in cars, reducing slouching and promoting upright, stable driving posture.",
+      "category": "seating_support"
+    },
+    {
+      "id": 15,
+      "name": "Portable Backrest Support (Rigid + Cushion Combo)",
+      "description": "For sitting on floor, bed, or non-backed chairs. Provides instant spine support to avoid slouching and maintain lumbar curve.",
+      "category": "seating_support"
+    },
+    {
+      "id": 16,
+      "name": "Adjustable LED Task Light",
+      "description": "Reduces the need to lean forward or crane neck when reading or working, especially for elders. Prevents forward head posture and eye strain.",
+      "category": "desk_accessories"
+    },
+    {
+      "id": 17,
+      "name": "Posture-Correction Strap (Soft Elastic Chest Band)",
+      "description": "Gently retracts shoulders and promotes upright torso alignment, useful for habitual hunching during phone/laptop use.",
+      "category": "posture_correction"
+    },
+    {
+      "id": 18,
+      "name": "Phone Grip / PopSocket",
+      "description": "Reduces wrist and finger strain during prolonged phone use and helps maintain neutral wrist angles.",
+      "category": "device_accessories"
+    },
+    {
+      "id": 19,
+      "name": "Laptop External Keyboard + Mouse Kit",
+      "description": "Allows laptop screen to remain elevated on stand while keeping hands in neutral position. Reduces neck, shoulder, and wrist strain.",
+      "category": "desk_accessories"
+    },
+    {
+      "id": 20,
+      "name": "Ergonomic Pillow Wedge (Back Support Wedge)",
+      "description": "Supports the entire trunk at a proper angle when reclining in bed for TV or study, reducing neck flexion and lumbar slouching.",
+      "category": "seating_support"
+    }
+  ]
+}
