@@ -25,3 +25,7 @@ ergonomic_assessment_results_with_version_3.json
 .venv/
 
 testing_images/.DS_Store
+
+./agent.ipynb
+
+agent.ipynb
