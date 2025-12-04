@@ -41,6 +41,7 @@ def analyze_image_path(image_path: str) -> dict:
         "messages": [],
         "should_skip_ergonomics": False,
         "filter_result": None,
+        "affected_body_regions": [],
     }
 
     try:

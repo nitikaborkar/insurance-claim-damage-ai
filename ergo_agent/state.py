@@ -15,6 +15,9 @@ import io
 with open("activities.json", "r") as f:
     ERGONOMIC_DATA = json.load(f)
 
+with open("products.json", "r") as f:
+    PRODUCT_DATA = json.load(f)
+
 # Activity categories for classification
 ACTIVITY_CATEGORIES = list(ERGONOMIC_DATA.keys())
 
@@ -37,6 +40,7 @@ class AgentState(TypedDict):
     messages: Annotated[List[str], add]  
     should_skip_ergonomics: bool
     filter_result: Dict | None
+    affected_body_regions: List[str]
 
 
 # ============================================================================

@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from langchain_core.messages import HumanMessage, SystemMessage
-from ergo_agent.state import AgentState, ERGONOMIC_DATA, ACTIVITY_CATEGORIES
+from ergo_agent.state import AgentState, ERGONOMIC_DATA, ACTIVITY_CATEGORIES, PRODUCT_DATA
 import json
 from langchain_anthropic import ChatAnthropic
 
@@ -49,42 +49,42 @@ def general_ergonomic_analysis(state: AgentState) -> AgentState:
     
     system_prompt = """You are an expert ergonomic assessor with deep knowledge of biomechanics, posture, and workplace ergonomics.
 
-Analyze this image for ANY ergonomic risks or postural issues you can identify. Consider:
+    Analyze this image for ANY ergonomic risks or postural issues you can identify. Consider:
 
-1. **Head and Neck Position**: Forward head posture, neck flexion/extension, rotation
-2. **Shoulders and Upper Back**: Rounded shoulders, elevation, asymmetry
-3. **Lower Back and Spine**: Lumbar support, slouching, twisting
-4. **Arms and Wrists**: Arm support, wrist angles, reaching
-5. **Hips and Legs**: Hip alignment, leg positioning, foot support
-6. **Screen/Device Position**: Distance, height, angle
-7. **Overall Posture**: Balance, symmetry, sustained positions
-8. **Environmental Factors**: Workstation setup, furniture support
+    1. **Head and Neck Position**: Forward head posture, neck flexion/extension, rotation
+    2. **Shoulders and Upper Back**: Rounded shoulders, elevation, asymmetry
+    3. **Lower Back and Spine**: Lumbar support, slouching, twisting
+    4. **Arms and Wrists**: Arm support, wrist angles, reaching
+    5. **Hips and Legs**: Hip alignment, leg positioning, foot support
+    6. **Screen/Device Position**: Distance, height, angle
+    7. **Overall Posture**: Balance, symmetry, sustained positions
+    8. **Environmental Factors**: Workstation setup, furniture support
 
-For EACH risk you identify, provide:
-- Specific body region affected
-- Clear description of what you observe
-- Why this is problematic (health impact)
-- Quick fix recommendation
-- Long-term best practice
+    For EACH risk you identify, provide:
+    - Specific body region affected
+    - Clear description of what you observe
+    - Why this is problematic (health impact)
+    - Quick fix recommendation
+    - Long-term best practice
 
-Respond in this exact JSON format:
-{
-  "risk_analysis": [
+    Respond in this exact JSON format:
     {
-      "check_number": 1,
-      "cue": "descriptive name of the postural issue",
-      "body_region": "specific body part",
-      "present": true,
-      "confidence": "HIGH/MEDIUM/LOW",
-      "observation": "what you see in the image",
-      "risk": "why this is harmful",
-      "quick_fix": "immediate action to take",
-      "long_term_practice": "sustainable solution"
+    "risk_analysis": [
+        {
+        "check_number": 1,
+        "cue": "descriptive name of the postural issue",
+        "body_region": "specific body part",
+        "present": true,
+        "confidence": "HIGH/MEDIUM/LOW",
+        "observation": "what you see in the image",
+        "risk": "why this is harmful",
+        "quick_fix": "immediate action to take",
+        "long_term_practice": "sustainable solution"
+        }
+    ]
     }
-  ]
-}
 
-Only include risks you can actually see in the image. Be thorough but accurate."""
+    Only include risks you can actually see in the image. Be thorough but accurate."""
 
     messages = [
         SystemMessage(content=system_prompt),
@@ -162,25 +162,25 @@ def activity_classifier_node(state: AgentState) -> AgentState:
     categories_list = "\n".join([f"- {cat}" for cat in ACTIVITY_CATEGORIES])
 
     system_prompt = f"""
-You are an ergonomic activity classifier.
+    You are an ergonomic activity classifier.
 
-You MUST:
-1) Pick ONE activity category from this list:
-{categories_list}
+    You MUST:
+    1) Pick ONE activity category from this list:
+    {categories_list}
 
-2) Provide a SHORT descriptive title of the activity being performed. 
-Examples: "Working at desk", "Lifting box from floor", "Cooking at kitchen counter". Keep it concise (3-4 words).
+    2) Provide a SHORT descriptive title of the activity being performed. 
+    Examples: "Working at desk", "Lifting box from floor", "Cooking at kitchen counter". Keep it concise (3-4 words).
 
-3) Briefly describe the overall environment/context in 1 short sentence:
-   - Examples: "indoor office with desk and laptop", "outdoor park bench", "home living room sofa", "factory floor with boxes", "public transport seat".
+    3) Briefly describe the overall environment/context in 1 short sentence:
+    - Examples: "indoor office with desk and laptop", "outdoor park bench", "home living room sofa", "factory floor with boxes", "public transport seat".
 
-Respond ONLY in this JSON format:
-{{
-  "activity_category": "exact category name or OTHERS",
-  "activity_title": "short descriptive title of the activity",
-  "scene_context": "short description of where and how the person is situated"
-}}
-"""
+    Respond ONLY in this JSON format:
+    {{
+    "activity_category": "exact category name or OTHERS",
+    "activity_title": "short descriptive title of the activity",
+    "scene_context": "short description of where and how the person is situated"
+    }}
+    """
 
     messages = [
         SystemMessage(content=system_prompt),
@@ -272,49 +272,49 @@ def filterer_node(state: AgentState) -> AgentState:
     print("=" * 60)
 
     system_prompt = f"""
-You are an ergonomic activity filterer. Your job is to decide whether an input image
-is suitable for meaningful ergonomic assessment for the activity category:
-`{state["activity_category"]}`.
+    You are an ergonomic activity filterer. Your job is to decide whether an input image
+    is suitable for meaningful ergonomic assessment for the activity category:
+    `{state["activity_category"]}`.
 
-You MUST classify the image into one of two labels:
-- "VALID"      → ergonomic assessment CAN be performed
-- "INVALID"    → ergonomic assessment SHOULD BE SKIPPED
+    You MUST classify the image into one of two labels:
+    - "VALID"      → ergonomic assessment CAN be performed
+    - "INVALID"    → ergonomic assessment SHOULD BE SKIPPED
 
-General rules:
-1. Only assess REAL humans in REAL photos or videos.
-- Reject cartoons, illustrations, avatars, CGI renders, stick figures, or mannequin images.
-2. The activity must be a meaningful, sustained task where posture is held or repeated
-long enough to create ergonomic risk (e.g., desk work, lifting, cooking, cleaning).
-- Reject short, transient or incidental actions such as:
-    - quickly glancing at a watch.
-    - casual posing for a photo or stretching for a second
-3. The person's posture and work setup must be visible enough to judge ergonomics.
-- Reject images where:
-    - most of the body is out of frame or heavily occluded
-    - the key working limb or tool is completely hidden
-    - the scene is too dark, blurry, or distant to see posture clearly.
-4. If the image shows a mobility aid (wheelchair, walking stick, crutches, walker),
-it is STILL VALID as long as:
-- the person is clearly performing a real task (e.g., typing, cooking, reaching, pushing, texting, scrolling, lifting)
-- the posture and relationship to the workstation/equipment can be seen.
-- the person is engaging in a common activity (eg: carrying items, backpack, luggage) that could be analyzed ergonomically.
-- the person is exercising (eg: lifting weights, doing yoga, running, walking) where posture and setup can be judged.
-5. If the scene is ambiguous and you cannot reliably infer what task is being performed,
-treat it as INVALID.
+    General rules:
+    1. Only assess REAL humans in REAL photos or videos.
+    - Reject cartoons, illustrations, avatars, CGI renders, stick figures, or mannequin images.
+    2. The activity must be a meaningful, sustained task where posture is held or repeated
+    long enough to create ergonomic risk (e.g., desk work, lifting, cooking, cleaning).
+    - Reject short, transient or incidental actions such as:
+        - quickly glancing at a watch.
+        - casual posing for a photo or stretching for a second
+    3. The person's posture and work setup must be visible enough to judge ergonomics.
+    - Reject images where:
+        - most of the body is out of frame or heavily occluded
+        - the key working limb or tool is completely hidden
+        - the scene is too dark, blurry, or distant to see posture clearly.
+    4. If the image shows a mobility aid (wheelchair, walking stick, crutches, walker),
+    it is STILL VALID as long as:
+    - the person is clearly performing a real task (e.g., typing, cooking, reaching, pushing, texting, scrolling, lifting)
+    - the posture and relationship to the workstation/equipment can be seen.
+    - the person is engaging in a common activity (eg: carrying items, backpack, luggage) that could be analyzed ergonomically.
+    - the person is exercising (eg: lifting weights, doing yoga, running, walking) where posture and setup can be judged.
+    5. If the scene is ambiguous and you cannot reliably infer what task is being performed,
+    treat it as INVALID.
 
-Think step by step about:
-- Is this a real human?
-- Is this a sustained, ergonomically relevant activity?
-- Can posture and setup be seen clearly enough to judge risk?
+    Think step by step about:
+    - Is this a real human?
+    - Is this a sustained, ergonomically relevant activity?
+    - Can posture and setup be seen clearly enough to judge risk?
 
-Respond ONLY in this strict JSON format:
+    Respond ONLY in this strict JSON format:
 
-{{
-"validity": "VALID" or "INVALID",
-"reason": "one-sentence explanation",
-"notes_for_downstream": "any hints for later ergonomic analysis, or empty string"
-}}
-"""
+    {{
+    "validity": "VALID" or "INVALID",
+    "reason": "one-sentence explanation",
+    "notes_for_downstream": "any hints for later ergonomic analysis, or empty string"
+    }}
+    """
 
     messages = [
         SystemMessage(content=system_prompt),
@@ -419,60 +419,60 @@ def risk_analyzer_node(state: AgentState) -> AgentState:
     ])
     
     system_prompt = f"""
-You are an expert ergonomic risk assessor. Analyze the image for postural risks related to:
-`{activity_category}`.
+    You are an expert ergonomic risk assessor. Analyze the image for postural risks related to:
+    `{activity_category}`.
 
-IMPORTANT: You are NOT judging this exact frozen pose as if the person holds it forever.
-Instead, you must:
-- Infer the TYPICAL way this activity is performed over time in real life.
-- Assume a realistic duration and repetition pattern for this activity
-  (e.g., desk work: many hours with short breaks; cooking: repeated reaching, chopping, stirring;
-  lifting boxes: repeated lifts over a shift).
-- Distinguish between:
-  - brief, transient actions (e.g., quickly smelling food, glancing at a watch)
-  - sustained or frequently repeated postures (e.g., prolonged bending, twisting, overhead reaching).
+    IMPORTANT: You are NOT judging this exact frozen pose as if the person holds it forever.
+    Instead, you must:
+    - Infer the TYPICAL way this activity is performed over time in real life.
+    - Assume a realistic duration and repetition pattern for this activity
+    (e.g., desk work: many hours with short breaks; cooking: repeated reaching, chopping, stirring;
+    lifting boxes: repeated lifts over a shift).
+    - Distinguish between:
+    - brief, transient actions (e.g., quickly smelling food, glancing at a watch)
+    - sustained or frequently repeated postures (e.g., prolonged bending, twisting, overhead reaching).
 
-If the current frame shows a short, incidental motion that would only last a few seconds
-during normal work, you MUST:
-- Treat it as LOW ergonomic significance UNLESS this posture would be repeated frequently.
-- Base your main risk judgment on the general posture pattern expected for this activity
-  (e.g., for cooking, the person will mostly stand upright, alternate between cutting and stirring,
-  and only occasionally bend to smell or check food).
+    If the current frame shows a short, incidental motion that would only last a few seconds
+    during normal work, you MUST:
+    - Treat it as LOW ergonomic significance UNLESS this posture would be repeated frequently.
+    - Base your main risk judgment on the general posture pattern expected for this activity
+    (e.g., for cooking, the person will mostly stand upright, alternate between cutting and stirring,
+    and only occasionally bend to smell or check food).
 
-You need to evaluate the following ergonomic checks:
+    You need to evaluate the following ergonomic checks:
 
-{checks_description}
+    {checks_description}
 
-For EACH check, you must:
-1. Mentally simulate how a typical person performs this activity over a realistic period.
-2. Use the image to estimate their likely GENERAL posture during the task
-   (not just this single micro-moment).
-3. Decide if that risk would be present for a meaningful duration or at a meaningful frequency.
+    For EACH check, you must:
+    1. Mentally simulate how a typical person performs this activity over a realistic period.
+    2. Use the image to estimate their likely GENERAL posture during the task
+    (not just this single micro-moment).
+    3. Decide if that risk would be present for a meaningful duration or at a meaningful frequency.
 
-Then answer for each check:
-1. "present": true/false  → Is this risk likely to be present in the REALISTIC, ongoing activity?
-2. "confidence": "HIGH" / "MEDIUM" / "LOW"
-3. "observation": Brief explanation:
-   - reference what you see in the image, AND
-   - briefly state your assumption about how the activity continues over time
-     (e.g., "momentarily bent to smell food, but will mostly cook in upright standing posture,
-      so sustained trunk flexion risk is low").
+    Then answer for each check:
+    1. "present": true/false  → Is this risk likely to be present in the REALISTIC, ongoing activity?
+    2. "confidence": "HIGH" / "MEDIUM" / "LOW"
+    3. "observation": Brief explanation:
+    - reference what you see in the image, AND
+    - briefly state your assumption about how the activity continues over time
+        (e.g., "momentarily bent to smell food, but will mostly cook in upright standing posture,
+        so sustained trunk flexion risk is low").
 
-Respond ONLY in this JSON format:
+    Respond ONLY in this JSON format:
 
-{{
-  "risk_analysis": [
     {{
-      "check_number": 1,
-      "cue": "exact cue text",
-      "present": true or false,
-      "confidence": "HIGH" or "MEDIUM" or "LOW",
-      "observation": "what you see + how you expect the posture over time"
-    }},
-    ...
-  ]
-}}
-"""
+    "risk_analysis": [
+        {{
+        "check_number": 1,
+        "cue": "exact cue text",
+        "present": true or false,
+        "confidence": "HIGH" or "MEDIUM" or "LOW",
+        "observation": "what you see + how you expect the posture over time"
+        }},
+        ...
+    ]
+    }}
+    """
 
     messages = [
         SystemMessage(content=system_prompt),
@@ -543,7 +543,8 @@ Respond ONLY in this JSON format:
         key=lambda r: confidence_order.get(r.get("confidence", "LOW"), 3)
     )
 
-    state["flagged_risks"] = flagged_risks   
+    state["flagged_risks"] = flagged_risks  
+
 
     
     print(f"✅ Analysis complete: {len(flagged_risks)} risks flagged out of {len(risk_analysis)} checks")
@@ -594,65 +595,70 @@ def recommender_node(state: AgentState) -> AgentState:
     llm = make_model("claude-sonnet-4-20250514", timeout=60)
 
     system_prompt = f"""
-You are an ergonomist writing a concise, practical report.
+    You are an ergonomist writing a concise, practical report.
 
-Your goals:
-1. Produce a consolidated list of OBSERVED RISKS in clear language, suitable for a user report.
-2. Produce a single merged list of PRACTICAL RECOMMENDATIONS that a typical person could realistically follow,
-   given the scene context.
-3. Provide an OVERALL RISK LEVEL: LOW / MEDIUM / HIGH.
+    Your goals:
+    1. Produce a consolidated list of OBSERVED RISKS in clear language, suitable for a user report.
+    2. Produce a single merged list of PRACTICAL RECOMMENDATIONS that a typical person could realistically follow,
+    given the scene context.
+    3. List AFFECTED BODY REGIONS as individual body parts (e.g., ["Neck", "Shoulders", "Lower Back"]).
+    4. Provide an OVERALL RISK LEVEL: LOW / MEDIUM / HIGH.
 
-Important constraints:
-- Use the provided example quick fixes / long-term practices as grounded inspiration ONLY.
-- Do NOT copy them verbatim or assume they fit the current context.
-- Tailor recommendations to the specific scene context and environment.
-- Filter out unrealistic suggestions for the environment.
-  - For outdoor / park / travel / temporary setups:
-    - Avoid recommending large furniture or fixed equipment (e.g., full-sized monitor arm, heavy sit-stand desk).
-    - Prefer body-position changes, how to hold devices, using existing objects (bag, railing), or simple, low-cost items.
-  - For home / office / workstation setups:
-    - It is acceptable to suggest buying small ergonomic accessories (laptop stand, external keyboard, footrest)
-      if they clearly help.
-- Keep the recommendations actionable and specific, not generic platitudes.
-- Limit yourself to at most 3-5 total recommendations.
+    Important constraints:
+    - Use the provided example quick fixes / long-term practices as grounded inspiration ONLY.
+    - Do NOT copy them verbatim or assume they fit the current context.
+    - Tailor recommendations to the specific scene context and environment.
+    - Filter out unrealistic suggestions for the environment.
+    - For outdoor / park / travel / temporary setups:
+        - Avoid recommending large furniture or fixed equipment (e.g., full-sized monitor arm, heavy sit-stand desk).
+        - Prefer body-position changes, how to hold devices, using existing objects (bag, railing), or simple, low-cost items.
+    - For home / office / workstation setups:
+        - It is acceptable to suggest buying small ergonomic accessories (laptop stand, external keyboard, footrest)
+        if they clearly help.
+    - Keep the recommendations actionable and specific, not generic platitudes.
+    - Limit yourself to at most 3-5 total recommendations.
+    - For affected_body_regions: list each body part separately (e.g., "Neck", "Shoulders", "Upper Back", NOT "Neck and shoulders")
 
-Use this information:
-- Activity category: {activity_category}
-- Scene context: {scene_context}
 
-You will receive a JSON array "flagged_risks" with items that include:
-- body_region
-- issue_cue
-- why_risky
-- observation (what the vision model saw)
-- confidence
-- example_quick_fix
-- example_long_term_practice
+    Use this information:
+    - Activity category: {activity_category}
+    - Scene context: {scene_context}
 
-From these, you must:
-1) Merge and group similar problems into a small list of observed risks.
-2) Generate a realistic recommendation list, taking into account where the person is and what is plausible to change there.
-3) Assess the overall risk level based everything you know. Note that a HIGH risk level means there are serious ergonomic problems that need urgent attention. So prefer MEDIUM unless there are multiple severe issues.
+    You will receive a JSON array "flagged_risks" with items that include:
+    - body_region
+    - issue_cue
+    - why_risky
+    - observation (what the vision model saw)
+    - confidence
+    - example_quick_fix
+    - example_long_term_practice
 
-Respond ONLY in this JSON format:
+    From these, you must:
+    1) Merge and group similar problems into a small list of observed risks.
+    2) Generate a realistic recommendation list, taking into account where the person is and what is plausible to change there.
+    3) Extract individual affected body regions from the observed risks. e.g., ["Neck", "Lower Back"]
+    4) Assess the overall risk level based everything you know. Note that a HIGH risk level means there are serious ergonomic problems that need urgent attention. So prefer MEDIUM unless there are multiple severe issues.
 
-{{
-  "observed_risks": [
+    Respond ONLY in this JSON format:
+
     {{
-      "body_region": "Neck",
-      "description": "Neck is often bent forward to look down at the phone while sitting on a park bench",
-      "severity": "LOW/MEDIUM/HIGH",
-      "confidence": "HIGH/MEDIUM/LOW"
+    "observed_risks": [
+        {{
+        "body_region": "Neck",
+        "description": "Neck is often bent forward to look down at the phone while sitting on a park bench",
+        "severity": "LOW/MEDIUM/HIGH",
+        "confidence": "HIGH/MEDIUM/LOW"
+        }}
+    ],
+    "recommendations": [
+        "Hold the phone closer to eye level or rest your forearms on your thighs to raise the device instead of bending your neck deeply.",
+        "When at home or office, try to read or work at a table with back support rather than on a low bench.",
+        "Take a brief stretch break every 20–30 minutes to reset your neck and shoulders."
+    ], 
+    "affected_body_regions": ["Neck", "Shoulders", "Upper Back"],
+    "overall_risk_level": "LOW/MEDIUM/HIGH"
     }}
-  ],
-  "recommendations": [
-    "Hold the phone closer to eye level or rest your forearms on your thighs to raise the device instead of bending your neck deeply.",
-    "When at home or office, try to read or work at a table with back support rather than on a low bench.",
-    "Take a brief stretch break every 20–30 minutes to reset your neck and shoulders."
-  ], 
-  "overall_risk_level": "LOW/MEDIUM/HIGH"
-}}
-"""
+    """
 
     messages = [
         SystemMessage(content=system_prompt),
@@ -719,12 +725,178 @@ Respond ONLY in this JSON format:
             "recommendations": [
                 "Some ergonomic risks were detected, but the recommender could not generate detailed suggestions."
             ],
+            "affected_body_regions" : [],
             "overall_risk_level": "UNDETERMINED",
         }
 
     state["recommendations"] = [parsed]
     state["messages"].append(f"Generated LLM-based recommendations for {len(flagged_risks)} risks")
+    state["affected_body_regions"] = parsed.get("affected_body_regions", [])
     state["overall_risk_level"] = parsed.get("overall_risk_level", "UNDETERMINED")
     print("✅ Recommendations generated successfully")
 
+    return state
+
+def product_recommender_node(state: AgentState) -> AgentState:
+    """
+    Agent 5: Product Recommender
+    Analyzes flagged risks and recommendations to suggest relevant ergonomic products
+    """
+    print("\n🛍️ AGENT 5: Product Recommender")
+    print("=" * 60)
+
+    # Check if there are recommendations to work with
+    recommendations = state.get("recommendations", [])
+    if not recommendations or not recommendations[0].get("observed_risks"):
+        print("✅ No risks to address - no products needed")
+        state["product_recommendations"] = []
+        state["messages"].append("No product recommendations needed")
+        return state
+
+    # Load products from JSON file
+    import json
+    from pathlib import Path
+    
+    # Extract risk and recommendation context
+    observed_risks = recommendations[0].get("observed_risks", [])
+    recommendation_list = recommendations[0].get("recommendations", [])
+    activity_category = state.get("activity_category", "OTHERS")
+    scene_context = state.get("scene_context", "unspecified environment")
+    overall_risk_level = state.get("overall_risk_level", "MEDIUM")
+
+    print(f"🎯 Analyzing {len(observed_risks)} risks for product matches")
+
+    # Prepare context for LLM
+    risks_summary = []
+    for risk in observed_risks:
+        risks_summary.append({
+            "body_region": risk.get("body_region"),
+            "description": risk.get("description"),
+            "severity": risk.get("severity")
+        })
+
+    # Create compact product catalog for LLM
+    products_catalog = []
+    products = PRODUCT_DATA.get("ergonomic_products", [])
+    for product in products:
+        products_catalog.append({
+            "id": product.get("id"),
+            "name": product.get("name"),
+            "description": product.get("description"),
+            "category": product.get("category")
+        })
+
+    llm = make_model("claude-sonnet-4-20250514", timeout=60)
+
+    system_prompt = f"""You are an ergonomic product consultant who matches the right products to specific ergonomic problems.
+
+    Your task:
+    1. Review the observed ergonomic risks and existing recommendations
+    2. Select 1-5 products from the catalog that would DIRECTLY help address the specific risks
+    3. Prioritize products that fit the scene context and activity type
+
+    Important constraints:
+    - ONLY recommend products that DIRECTLY address observed risks
+    - Consider the scene context: {scene_context}
+    - Consider the activity: {activity_category}
+    - For temporary/outdoor/public spaces: prefer portable, small items
+    - For home/office: can suggest furniture or fixed equipment
+    - DO NOT recommend products just because they exist - they must match actual risks
+    - If a risk can be fixed by posture adjustment alone, DON'T recommend a product for it
+    - Prioritize multi-purpose products that address multiple risks
+    - Limit to maximum 3 products (fewer is better)
+
+    For each recommended product, you must:
+    1. Clearly state WHICH specific risk(s) it addresses (reference body region + description)
+    2. Explain HOW it helps in this specific context
+    3. Assign priority: HIGH (addresses severe risk), MEDIUM (addresses moderate risk), LOW (nice-to-have)
+
+    Respond ONLY in this JSON format:
+
+    {{
+    "product_recommendations": [
+        {{
+        "product_id": 5,
+        "product_name": "Ergonomic Seat Cushion (Firm Foam)",
+        "addresses_risks": ["Lower back - slouching on soft sofa", "Pelvis - backward rolling"],
+        "why_helpful": "Elevates hips and maintains pelvic alignment on the soft sofa surface, directly addressing the lower back slouching observed",
+        "priority": "HIGH",
+        "usage_tip": "Place on sofa seat to raise hips 2-3 inches"
+        }}
+    ],
+    "reasoning": "Brief explanation of overall product selection strategy for this case"
+    }}
+
+    If NO products are needed (risks can be fixed by behavior alone), return empty array with reasoning.
+    """
+
+    # Prepare the input data
+    input_data = {
+        "observed_risks": risks_summary,
+        "existing_recommendations": recommendation_list,
+        "activity_category": activity_category,
+        "scene_context": scene_context,
+        "overall_risk_level": overall_risk_level,
+        "available_products": products_catalog
+    }
+
+    # Cache the system prompt
+    messages = [
+        SystemMessage(content=[
+            {
+                "type": "text",
+                "text": system_prompt,
+                "cache_control": {"type": "ephemeral"}
+            }
+        ]),
+        HumanMessage(content=[
+            {
+                "type": "text",
+                "text": json.dumps(input_data, ensure_ascii=False)
+            }
+        ])
+    ]
+
+    try:
+        response = llm.invoke(messages)
+    except Exception as e:
+        print(f"⚠️ Product recommender: primary model failed: {e}")
+        try:
+            llm_fallback = make_model("claude-haiku-3-20241022", timeout=30)
+            response = llm_fallback.invoke(messages)
+        except Exception as e2:
+            print(f"🛑 Product recommender: fallback model also failed: {e2}")
+            state["product_recommendations"] = []
+            state["messages"].append("Product recommender failed due to model error")
+            return state
+
+    # Parse response
+    response_text = response.content.strip()
+    if "```json" in response_text:
+        response_text = response_text.split("```json")[1].split("```")[0]
+    elif "```" in response_text:
+        response_text = response_text.split("```")[1]
+
+    try:
+        parsed = json.loads(response_text)
+        product_recommendations = parsed.get("product_recommendations", [])
+        reasoning = parsed.get("reasoning", "")
+    except json.JSONDecodeError as e:
+        print(f"⚠️ Failed to parse product recommender JSON: {e}")
+        product_recommendations = []
+        reasoning = "Failed to parse recommendations"
+
+    state["product_recommendations"] = product_recommendations
+    state["product_selection_reasoning"] = reasoning
+    
+    print(f"✅ Product recommendation complete: {len(product_recommendations)} products suggested")
+    if product_recommendations:
+        for prod in product_recommendations:
+            print(f"   🛒 {prod.get('product_name')} (Priority: {prod.get('priority')})")
+            print(f"      → Addresses: {', '.join(prod.get('addresses_risks', []))}")
+    else:
+        print(f"   ℹ️  No products needed: {reasoning}")
+    
+    state["messages"].append(f"Recommended {len(product_recommendations)} products")
+    
     return state
