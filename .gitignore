@@ -39,4 +39,4 @@ venv/
 *.log
 .DS_Store
 *.tmp
-.streamlit/secrets.toml
+.streamlit/secrets.tomlagent.ipynb
