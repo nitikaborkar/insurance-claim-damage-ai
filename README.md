@@ -134,7 +134,7 @@ echo "GOOGLE_API_KEY=your_api_key_here" > .env
 streamlit run streamlit_app.py
 ```
 
-```
+
 ## Project Structure
 
 ```
@@ -193,8 +193,6 @@ insurance-claim-damage-ai/
 - Fire Damage
 - Others (General analysis)
 
-
-=======
 ## Use Cases
 
 - **Insurance Companies:** Automated first-pass claim assessment
