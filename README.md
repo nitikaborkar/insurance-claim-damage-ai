@@ -8,7 +8,7 @@ An intelligent multi-agent system for automated vehicle damage detection and ins
 
 ## Live Demo
 
-**Try it now:** [https://car-damage-ai.streamlit.app](https://car-damage-ai.streamlit.app)
+**Try it now:** [https://insurance-claim-damage.streamlit.app/](https://insurance-claim-damage.streamlit.app/)
 
 Upload a photo of vehicle damage and get instant AI-powered assessment with cost estimation and claim recommendations.
 
