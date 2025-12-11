@@ -1,4 +1,4 @@
-# 🚗 AI Vehicle Damage Assessment System
+# AI Vehicle Damage Assessment System
 
 An intelligent multi-agent system for automated vehicle damage detection and insurance claim processing using computer vision and large language models.
 
@@ -6,13 +6,13 @@ An intelligent multi-agent system for automated vehicle damage detection and ins
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## 🎯 Live Demo
+## Live Demo
 
 **Try it now:** [https://car-damage-ai.streamlit.app](https://car-damage-ai.streamlit.app)
 
 Upload a photo of vehicle damage and get instant AI-powered assessment with cost estimation and claim recommendations.
 
-## 📸 IT LOOKS LIKE : 
+## IT LOOKS LIKE : 
 
 ### Home Interface
 ![Home Screen](screenshots/home-screen.png)
@@ -25,22 +25,22 @@ Upload a photo of vehicle damage and get instant AI-powered assessment with cost
 
 ### Detailed Damage Report
 ![Damage Details](screenshots/damage-details.png)
-## ✨ Features
+## Features
 
-- **🤖 5-Agent AI Pipeline**
+- **5-Agent AI Pipeline**
   - Damage Classification Agent
   - Photo Validation Agent  
   - Severity Analysis Agent
   - Claim Decision Engine
   - Action Recommendation System
 
-- **🎨 Modern Dark UI** - Professional, responsive interface
-- **📊 Detailed Analysis** - Component-level damage assessment
-- **💰 Cost Estimation** - Automated repair cost calculation
-- **🚨 Fraud Detection** - Pattern recognition for suspicious claims
-- **📈 Real-time Processing** - 30-40 second analysis time
+- ** Modern Dark UI** - Professional, responsive interface
+- ** Detailed Analysis** - Component-level damage assessment
+- ** Cost Estimation** - Automated repair cost calculation
+- ** Fraud Detection** - Pattern recognition for suspicious claims
+- ** Real-time Processing** - 30-40 second analysis time
 
-## 🏗️ Architecture
+## Architecture
 
 User Upload → Image Validation → Damage Classification
 ↓
@@ -63,7 +63,7 @@ Claim Decision + Actions
 - **Deployment:** Streamlit Cloud
 - **Version Control:** Git/GitHub
 
-## 🚀 Quick Start
+## Quick Start
 
 ### **Prerequisites**
 
@@ -100,7 +100,7 @@ echo "GOOGLE_API_KEY=your_api_key_here" > .env
 streamlit run streamlit_app.py
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 insurance-claim-damage-ai/
 ├── streamlit_app.py # Main Streamlit application
@@ -118,7 +118,7 @@ insurance-claim-damage-ai/
 └── README.md
 
 
-## 🔧 How It Works
+## How It Works
 
 1. **Image Upload:** User uploads vehicle damage photo
 2. **Agent 1 - Classifier:** Categorizes damage type (front-end collision, side impact, etc.)
@@ -127,7 +127,7 @@ insurance-claim-damage-ai/
 5. **Agent 4 - Decision Maker:** Determines claim status (Approve/Investigate/Reject)
 6. **Agent 5 - Recommender:** Suggests next actions and repair protocols
 
-## 📊 Supported Damage Categories
+## Supported Damage Categories
 
 - Front-End Collision
 - Rear-End Collision  
@@ -140,7 +140,7 @@ insurance-claim-damage-ai/
 - Fire Damage
 - Others (General analysis)
 
-## 🎓 Use Cases
+## Use Cases
 
 - **Insurance Companies:** Automated first-pass claim assessment
 - **Auto Repair Shops:** Instant damage evaluation
@@ -148,14 +148,14 @@ insurance-claim-damage-ai/
 - **Car Dealerships:** Pre-sale condition reports
 - **Individual Owners:** DIY damage assessment before filing claims
 
-## 🔐 Security & Privacy
+## Security & Privacy
 
 - No data storage - All processing is ephemeral
 - API keys stored securely in environment variables
 - No personal information collected
 - HTTPS encrypted communication
 
-## 📈 Performance
+## Performance
 
 - **Analysis Time:** 30-40 seconds per image
 - **Accuracy:** ~85-90% damage classification
