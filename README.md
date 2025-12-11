@@ -25,12 +25,8 @@ Upload a photo of vehicle damage and get instant AI-powered assessment with cost
 
 ### Detailed Damage Report
 ![Damage Details](screenshots/damage-details.png)
-<<<<<<< HEAD
-##  Features
-=======
-## Features
->>>>>>> add99f6b47ae671877f6169b1b2930a01f00e79f
 
+## Features
 - **5-Agent AI Pipeline**
   - Damage Classification Agent
   - Photo Validation Agent  
@@ -38,19 +34,16 @@ Upload a photo of vehicle damage and get instant AI-powered assessment with cost
   - Claim Decision Engine
   - Action Recommendation System
 
-<<<<<<< HEAD
 - **Modern Dark UI** - Professional, responsive interface
 - **Detailed Analysis** - Component-level damage assessment
 - **Cost Estimation** - Automated repair cost calculation
 - **Fraud Detection** - Pattern recognition for suspicious claims
 - **Real-time Processing** - 30-40 second analysis time
-=======
-- ** Modern Dark UI** - Professional, responsive interface
-- ** Detailed Analysis** - Component-level damage assessment
-- ** Cost Estimation** - Automated repair cost calculation
-- ** Fraud Detection** - Pattern recognition for suspicious claims
-- ** Real-time Processing** - 30-40 second analysis time
->>>>>>> add99f6b47ae671877f6169b1b2930a01f00e79f
+- **Modern Dark UI** - Professional, responsive interface
+- **Detailed Analysis** - Component-level damage assessment
+- **Cost Estimation** - Automated repair cost calculation
+- **Fraud Detection** - Pattern recognition for suspicious claims
+- **Real-time Processing** - 30-40 second analysis time
 
 ## Architecture
 
@@ -104,18 +97,14 @@ Upload a photo of vehicle damage and get instant AI-powered assessment with cost
 - **Deployment:** Streamlit Cloud
 - **Version Control:** Git/GitHub
 
-<<<<<<< HEAD
-##  Quick Start
-=======
 ## Quick Start
->>>>>>> add99f6b47ae671877f6169b1b2930a01f00e79f
 
 ### **Prerequisites**
 
 - Python 3.12+
 - Google Gemini API key ([Get one here](https://aistudio.google.com/))
 
-### **Installation**
+# **Installation**
 
 ## Clone the repository
 
@@ -145,12 +134,8 @@ echo "GOOGLE_API_KEY=your_api_key_here" > .env
 streamlit run streamlit_app.py
 ```
 
-<<<<<<< HEAD
 ```
-## 📁 Project Structure
-=======
 ## Project Structure
->>>>>>> add99f6b47ae671877f6169b1b2930a01f00e79f
 
 ```
 
@@ -194,11 +179,8 @@ insurance-claim-damage-ai/
 5. **Agent 4 - Decision Maker:** Determines claim status (Approve/Investigate/Reject)
 6. **Agent 5 - Recommender:** Suggests next actions and repair protocols
 
-<<<<<<< HEAD
-##  Supported Damage Categories
-=======
+
 ## Supported Damage Categories
->>>>>>> add99f6b47ae671877f6169b1b2930a01f00e79f
 
 - Front-End Collision
 - Rear-End Collision  
@@ -211,11 +193,9 @@ insurance-claim-damage-ai/
 - Fire Damage
 - Others (General analysis)
 
-<<<<<<< HEAD
-##  Use Cases
+
 =======
 ## Use Cases
->>>>>>> add99f6b47ae671877f6169b1b2930a01f00e79f
 
 - **Insurance Companies:** Automated first-pass claim assessment
 - **Auto Repair Shops:** Instant damage evaluation
@@ -223,22 +203,14 @@ insurance-claim-damage-ai/
 - **Car Dealerships:** Pre-sale condition reports
 - **Individual Owners:** DIY damage assessment before filing claims
 
-<<<<<<< HEAD
 ##  Security & Privacy
-=======
-## Security & Privacy
->>>>>>> add99f6b47ae671877f6169b1b2930a01f00e79f
 
 - No data storage - All processing is ephemeral
 - API keys stored securely in environment variables
 - No personal information collected
 - HTTPS encrypted communication
 
-<<<<<<< HEAD
 ##  Performance
-=======
-## Performance
->>>>>>> add99f6b47ae671877f6169b1b2930a01f00e79f
 
 - **Analysis Time:** 30-40 seconds per image
 - **Accuracy:** ~85-90% damage classification
@@ -260,6 +232,6 @@ This project is licensed under the [Creative Commons Attribution-NonCommercial-N
 
 For commercial use or licensing inquiries, please contact me.
 
-## ⚖️ Important Notice
+## Important Notice
 
 This project was developed as part of my academic work at Nanyang Technological University and is protected for portfolio and demonstration purposes. Unauthorized reproduction, particularly for job applications or academic submissions, is strictly prohibited.
