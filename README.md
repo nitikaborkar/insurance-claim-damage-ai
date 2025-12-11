@@ -4,15 +4,15 @@ An intelligent multi-agent system for automated vehicle damage detection and ins
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://car-damage-ai.streamlit.app)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
 
-## 🎯 Live Demo
+## Live Demo
 
 **Try it now:** [https://car-damage-ai.streamlit.app](https://car-damage-ai.streamlit.app)
 
 Upload a photo of vehicle damage and get instant AI-powered assessment with cost estimation and claim recommendations.
 
-## 📸 IT LOOKS LIKE : 
+## IT LOOKS LIKE : 
 
 ### Home Interface
 ![Home Screen](screenshots/home-screen.png)
@@ -25,33 +25,62 @@ Upload a photo of vehicle damage and get instant AI-powered assessment with cost
 
 ### Detailed Damage Report
 ![Damage Details](screenshots/damage-details.png)
-## ✨ Features
+##  Features
 
-- **🤖 5-Agent AI Pipeline**
+- **5-Agent AI Pipeline**
   - Damage Classification Agent
   - Photo Validation Agent  
   - Severity Analysis Agent
   - Claim Decision Engine
   - Action Recommendation System
 
-- **🎨 Modern Dark UI** - Professional, responsive interface
-- **📊 Detailed Analysis** - Component-level damage assessment
-- **💰 Cost Estimation** - Automated repair cost calculation
-- **🚨 Fraud Detection** - Pattern recognition for suspicious claims
-- **📈 Real-time Processing** - 30-40 second analysis time
+- **Modern Dark UI** - Professional, responsive interface
+- **Detailed Analysis** - Component-level damage assessment
+- **Cost Estimation** - Automated repair cost calculation
+- **Fraud Detection** - Pattern recognition for suspicious claims
+- **Real-time Processing** - 30-40 second analysis time
 
-## 🏗️ Architecture
+## Architecture
 
-User Upload → Image Validation → Damage Classification
+### 5-Agent Pipeline
+
+```
+
+┌──────────────────────────────────────────────────────┐
+│                    USER UPLOADS IMAGE                 │
+└────────────────────┬─────────────────────────────────┘
 ↓
-Multi-Agent Analysis Pipeline
+┌────────────────────┐
+│  AGENT 1: CLASSIFIER│
+│  Identifies damage  │
+│  type \& category    │
+└─────────┬───────────┘
 ↓
-┌───────────────────┼───────────────────┐
-↓ ↓ ↓
-Severity Analysis Cost Estimation Fraud Detection
-└───────────────────┼───────────────────┘
+┌────────────────────┐
+│  AGENT 2: VALIDATOR│
+│  Checks photo       │
+│  quality \& auth     │
+└─────────┬───────────┘
 ↓
-Claim Decision + Actions
+┌────────────────────┐
+│  AGENT 3: ANALYZER │
+│  Assesses severity │
+│  \& estimates cost  │
+└─────────┬───────────┘
+↓
+┌────────────────────┐
+│  AGENT 4: DECISION │
+│  Approves/rejects  │
+│  claim             │
+└─────────┬───────────┘
+↓
+┌────────────────────┐
+│ AGENT 5: RECOMMENDER│
+│  Suggests next     │
+│  actions           │
+└────────────────────┘
+
+```
 
 
 ### **Tech Stack**
@@ -63,7 +92,7 @@ Claim Decision + Actions
 - **Deployment:** Streamlit Cloud
 - **Version Control:** Git/GitHub
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### **Prerequisites**
 
@@ -100,22 +129,40 @@ echo "GOOGLE_API_KEY=your_api_key_here" > .env
 streamlit run streamlit_app.py
 ```
 
+```
 ## 📁 Project Structure
 
+```
+
 insurance-claim-damage-ai/
-├── streamlit_app.py # Main Streamlit application
-├── car_agent/
-│ ├── service.py # Business logic layer
-│ ├── graph.py # LangGraph workflow definition
-│ ├── nodes.py # Agent node implementations
-│ ├── state.py # State management
-│ └── config.py # Configuration
-├── data/
-│ ├── vehicle_damage_types.json # Damage taxonomy
-│ └── claim_actions.json # Action catalog
-├── testing_images/ # Sample test images
-├── requirements.txt # Python dependencies
-└── README.md
+│
+├── streamlit_app.py              \# Main application entry point
+│
+├── car_agent/                    \# Core agent logic
+│   ├── __init__.py
+│   ├── service.py                \# Business logic layer
+│   ├── graph.py                  \# LangGraph workflow
+│   ├── nodes.py                  \# Agent implementations
+│   ├── state.py                  \# State management
+│   └── config.py                 \# Configuration settings
+│
+├── data/                         \# Knowledge base
+│   ├── vehicle_damage_types.json \# Damage taxonomy
+│   └── claim_actions.json        \# Action catalog
+│
+├── testing_images/               \# Sample test images
+│   ├── collision_front.jpg
+│   ├── side_impact.png
+│   └── windshield_crack.jpg
+│
+├── screenshots/                  \# App screenshots
+│
+├── requirements.txt              \# Python dependencies
+├── .gitignore                   \# Git ignore rules
+├── LICENSE                      \# CC BY-NC-ND 4.0
+└── README.md                    \# Documentation
+
+```
 
 
 ## 🔧 How It Works
@@ -127,7 +174,7 @@ insurance-claim-damage-ai/
 5. **Agent 4 - Decision Maker:** Determines claim status (Approve/Investigate/Reject)
 6. **Agent 5 - Recommender:** Suggests next actions and repair protocols
 
-## 📊 Supported Damage Categories
+##  Supported Damage Categories
 
 - Front-End Collision
 - Rear-End Collision  
@@ -140,7 +187,7 @@ insurance-claim-damage-ai/
 - Fire Damage
 - Others (General analysis)
 
-## 🎓 Use Cases
+##  Use Cases
 
 - **Insurance Companies:** Automated first-pass claim assessment
 - **Auto Repair Shops:** Instant damage evaluation
@@ -148,14 +195,14 @@ insurance-claim-damage-ai/
 - **Car Dealerships:** Pre-sale condition reports
 - **Individual Owners:** DIY damage assessment before filing claims
 
-## 🔐 Security & Privacy
+##  Security & Privacy
 
 - No data storage - All processing is ephemeral
 - API keys stored securely in environment variables
 - No personal information collected
 - HTTPS encrypted communication
 
-## 📈 Performance
+##  Performance
 
 - **Analysis Time:** 30-40 seconds per image
 - **Accuracy:** ~85-90% damage classification
@@ -163,4 +210,20 @@ insurance-claim-damage-ai/
 - **Uptime:** 99.9% (Streamlit Cloud)
 
 
+## License
 
+Copyright © 2025 Nitika Borkar. All Rights Reserved.
+
+This project is licensed under the [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+**This means:**
+- ✅ You may view and share this project with attribution
+- ❌ You may NOT use this commercially
+- ❌ You may NOT modify or create derivative works
+- ❌ You may NOT claim this work as your own
+
+For commercial use or licensing inquiries, please contact me.
+
+## ⚖️ Important Notice
+
+This project was developed as part of my academic work at Nanyang Technological University and is protected for portfolio and demonstration purposes. Unauthorized reproduction, particularly for job applications or academic submissions, is strictly prohibited.
