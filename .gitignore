@@ -29,3 +29,14 @@ testing_images/.DS_Store
 ./agent.ipynb
 
 agent.ipynb
+
+
+.env
+*.pyc
+__pycache__/
+.venv/
+venv/
+*.log
+.DS_Store
+*.tmp
+.streamlit/secrets.toml

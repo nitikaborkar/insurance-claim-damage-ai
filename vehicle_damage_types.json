@@ -1,0 +1,315 @@
+{
+    "FRONT_END_COLLISION": [
+        {
+            "cue": "Hood dent, buckle, or visible deformation",
+            "damage_area": "Hood",
+            "risk": "Structural damage may affect engine compartment protection and resale value",
+            "repair_action": "Hood replacement or professional dent repair",
+            "cost_estimate": "$800-$2,500"
+        },
+        {
+            "cue": "Front bumper crack, separation, or missing pieces",
+            "damage_area": "Front Bumper",
+            "risk": "Compromised impact protection, possible sensor/camera damage",
+            "repair_action": "Bumper replacement and sensor recalibration",
+            "cost_estimate": "$600-$1,800"
+        },
+        {
+            "cue": "Headlight cracked, shattered, or misaligned",
+            "damage_area": "Headlight Assembly",
+            "risk": "Reduced visibility and safety, electrical hazard if water enters",
+            "repair_action": "Headlight assembly replacement",
+            "cost_estimate": "$400-$1,200"
+        },
+        {
+            "cue": "Front fender dent, scrape, or misalignment",
+            "damage_area": "Front Fender",
+            "risk": "Panel gaps may allow water intrusion, paint damage leads to rust",
+            "repair_action": "Fender repair or replacement with paint matching",
+            "cost_estimate": "$500-$1,500"
+        },
+        {
+            "cue": "Radiator visible through grille, coolant leak present",
+            "damage_area": "Radiator/Cooling System",
+            "risk": "Engine overheating risk, vehicle may be undriveable",
+            "repair_action": "Radiator replacement and cooling system inspection",
+            "cost_estimate": "$400-$1,000"
+        },
+        {
+            "cue": "Paint transfer from another vehicle visible",
+            "damage_area": "Multiple Panels",
+            "risk": "Indicates collision severity, may hide deeper damage",
+            "repair_action": "Paint removal, surface inspection, repainting",
+            "cost_estimate": "$300-$800"
+        },
+        {
+            "cue": "Grille broken, cracked, or missing",
+            "damage_area": "Front Grille",
+            "risk": "Reduced airflow to engine, debris entry risk",
+            "repair_action": "Grille replacement",
+            "cost_estimate": "$200-$600"
+        },
+        {
+            "cue": "Frame/chassis visible damage or bending",
+            "damage_area": "Front Frame",
+            "risk": "Structural integrity compromised, may affect vehicle safety and alignment",
+            "repair_action": "Frame straightening or vehicle may be total loss",
+            "cost_estimate": "$3,000-$8,000"
+        },
+        {
+            "cue": "Airbag deployment indicators (dashboard warning, steering wheel deformation)",
+            "damage_area": "Safety Systems",
+            "risk": "High-impact collision, airbag replacement required",
+            "repair_action": "Airbag system replacement and diagnostic reset",
+            "cost_estimate": "$1,500-$3,500"
+        },
+        {
+            "cue": "Front wheel misalignment or tire damage",
+            "damage_area": "Front Suspension/Wheel",
+            "risk": "Alignment and suspension damage affects handling and tire wear",
+            "repair_action": "Wheel alignment, suspension inspection, possible replacement",
+            "cost_estimate": "$400-$1,800"
+        }
+    ],
+    "REAR_END_COLLISION": [
+        {
+            "cue": "Trunk/boot dent, buckle, or won't close properly",
+            "damage_area": "Trunk/Tailgate",
+            "risk": "Structural damage, water intrusion risk, trunk mechanism damage",
+            "repair_action": "Trunk panel repair or replacement, latch adjustment",
+            "cost_estimate": "$700-$2,000"
+        },
+        {
+            "cue": "Rear bumper crack, separation, or pushed inward",
+            "damage_area": "Rear Bumper",
+            "risk": "Reduced rear impact protection, sensor damage (parking sensors/cameras)",
+            "repair_action": "Bumper replacement and sensor recalibration",
+            "cost_estimate": "$600-$1,600"
+        },
+        {
+            "cue": "Taillight cracked, shattered, or lens missing",
+            "damage_area": "Taillight Assembly",
+            "risk": "Reduced visibility to other drivers, water damage to electrical components",
+            "repair_action": "Taillight assembly replacement",
+            "cost_estimate": "$300-$900"
+        },
+        {
+            "cue": "Rear quarter panel dent or scrape",
+            "damage_area": "Rear Quarter Panel",
+            "risk": "Paint damage leads to rust, affects vehicle appearance and value",
+            "repair_action": "Panel beating, filler work, and repainting",
+            "cost_estimate": "$800-$2,200"
+        },
+        {
+            "cue": "Exhaust pipe bent, hanging, or damaged",
+            "damage_area": "Exhaust System",
+            "risk": "Exhaust leak, loud noise, emissions failure, fire hazard",
+            "repair_action": "Exhaust component replacement",
+            "cost_estimate": "$300-$1,000"
+        },
+        {
+            "cue": "Rear window cracked or shattered",
+            "damage_area": "Rear Window",
+            "risk": "Security risk, water intrusion, visibility impairment",
+            "repair_action": "Rear windscreen replacement",
+            "cost_estimate": "$400-$1,200"
+        },
+        {
+            "cue": "Rear suspension sagging or visible damage",
+            "damage_area": "Rear Suspension",
+            "risk": "Handling and ride quality affected, alignment issues",
+            "repair_action": "Suspension component inspection and replacement",
+            "cost_estimate": "$600-$2,000"
+        },
+        {
+            "cue": "Fuel tank or fuel lines visible damage",
+            "damage_area": "Fuel System",
+            "risk": "Fuel leak creates fire hazard and environmental concern",
+            "repair_action": "Fuel system repair, immediate safety inspection required",
+            "cost_estimate": "$500-$2,500"
+        }
+    ],
+    "SIDE_IMPACT": [
+        {
+            "cue": "Door dent, crease, or won't open/close properly",
+            "damage_area": "Side Door",
+            "risk": "Door mechanism damage, safety latch failure, water intrusion",
+            "repair_action": "Door panel repair or replacement, mechanism adjustment",
+            "cost_estimate": "$1,000-$3,000"
+        },
+        {
+            "cue": "Side mirror cracked, broken, or hanging",
+            "damage_area": "Side Mirror",
+            "risk": "Reduced visibility, illegal to drive, electrical damage if powered",
+            "repair_action": "Mirror assembly replacement",
+            "cost_estimate": "$200-$600"
+        },
+        {
+            "cue": "Side window cracked or shattered",
+            "damage_area": "Side Window",
+            "risk": "Security risk, water entry, flying glass hazard",
+            "repair_action": "Window replacement",
+            "cost_estimate": "$250-$500"
+        },
+        {
+            "cue": "Rocker panel (sill) scrape or dent",
+            "damage_area": "Rocker Panel",
+            "risk": "Structural weakness, rust risk, affects vehicle rigidity",
+            "repair_action": "Panel repair or replacement with rust protection",
+            "cost_estimate": "$600-$1,800"
+        },
+        {
+            "cue": "Wheel rim bent, cracked, or tire sidewall damage",
+            "damage_area": "Wheel/Tire",
+            "risk": "Tire blowout risk, vibration, alignment issues",
+            "repair_action": "Wheel replacement, tire replacement, alignment",
+            "cost_estimate": "$400-$1,200"
+        },
+        {
+            "cue": "B-pillar or door frame visible damage",
+            "damage_area": "Structural Pillar",
+            "risk": "Critical structural damage, occupant safety compromised",
+            "repair_action": "Structural assessment required, possible total loss",
+            "cost_estimate": "$3,000-$10,000"
+        },
+        {
+            "cue": "Side airbag deployment indicators",
+            "damage_area": "Side Safety Systems",
+            "risk": "Significant side impact, airbag replacement needed",
+            "repair_action": "Side airbag replacement and system reset",
+            "cost_estimate": "$1,200-$2,800"
+        },
+        {
+            "cue": "Paint scrape with exposed metal",
+            "damage_area": "Body Panel",
+            "risk": "Rust will develop quickly if not treated",
+            "repair_action": "Surface preparation and repainting with rust treatment",
+            "cost_estimate": "$400-$1,000"
+        }
+    ],
+    "PARKING_DAMAGE": [
+        {
+            "cue": "Minor bumper scrape or scuff marks",
+            "damage_area": "Bumper",
+            "risk": "Cosmetic damage, paint protection compromised",
+            "repair_action": "Buffing, touch-up paint, or bumper refinishing",
+            "cost_estimate": "$150-$500"
+        },
+        {
+            "cue": "Door edge dent from adjacent car door",
+            "damage_area": "Door Edge",
+            "risk": "Paint chipping leads to rust, cosmetic defect",
+            "repair_action": "Paintless dent repair (PDR) or minor panel work",
+            "cost_estimate": "$200-$600"
+        },
+        {
+            "cue": "Scratches on fender or quarter panel",
+            "damage_area": "Body Panel",
+            "risk": "Surface damage may expose primer or metal",
+            "repair_action": "Scratch repair and spot painting",
+            "cost_estimate": "$250-$700"
+        },
+        {
+            "cue": "Parking sensor cracked or damaged",
+            "damage_area": "Parking Sensor",
+            "risk": "Sensor malfunction, parking assistance system disabled",
+            "repair_action": "Sensor replacement and recalibration",
+            "cost_estimate": "$150-$400"
+        },
+        {
+            "cue": "License plate bent or damaged",
+            "damage_area": "License Plate/Bracket",
+            "risk": "Plate illegible, mounting bracket damage",
+            "repair_action": "Plate replacement and bracket repair",
+            "cost_estimate": "$50-$200"
+        },
+        {
+            "cue": "Rear camera lens cracked or obscured",
+            "damage_area": "Backup Camera",
+            "risk": "Reduced rearward visibility, safety feature disabled",
+            "repair_action": "Camera lens or assembly replacement",
+            "cost_estimate": "$200-$600"
+        }
+    ],
+    "WINDSHIELD_DAMAGE": [
+        {
+            "cue": "Small chip or star crack (less than 2cm)",
+            "damage_area": "Windshield",
+            "risk": "Crack may spread due to temperature changes or vibration",
+            "repair_action": "Resin injection repair if within repairable zone",
+            "cost_estimate": "$80-$150"
+        },
+        {
+            "cue": "Long crack across windshield (over 10cm)",
+            "damage_area": "Windshield",
+            "risk": "Structural integrity compromised, vision obstruction, illegal",
+            "repair_action": "Full windshield replacement required",
+            "cost_estimate": "$300-$800"
+        },
+        {
+            "cue": "Multiple impact points or bullseye cracks",
+            "damage_area": "Windshield",
+            "risk": "Unrepairable damage, windshield may shatter",
+            "repair_action": "Immediate windshield replacement",
+            "cost_estimate": "$350-$900"
+        },
+        {
+            "cue": "Crack in driver's line of sight",
+            "damage_area": "Windshield",
+            "risk": "Vision obstruction, failed safety inspection",
+            "repair_action": "Windshield replacement mandatory",
+            "cost_estimate": "$300-$800"
+        },
+        {
+            "cue": "Windshield delamination or haze between layers",
+            "damage_area": "Windshield",
+            "risk": "Lamination failure, reduced visibility",
+            "repair_action": "Windshield replacement",
+            "cost_estimate": "$300-$800"
+        }
+    ],
+    "UNDERCARRIAGE_DAMAGE": [
+        {
+            "cue": "Oil pan scrape or dent with leak",
+            "damage_area": "Oil Pan",
+            "risk": "Oil loss leads to engine damage, environmental hazard",
+            "repair_action": "Oil pan replacement, engine oil refill",
+            "cost_estimate": "$400-$1,200"
+        },
+        {
+            "cue": "Transmission case damage or leak",
+            "damage_area": "Transmission",
+            "risk": "Transmission fluid loss, potential transmission failure",
+            "repair_action": "Transmission case repair or replacement",
+            "cost_estimate": "$800-$3,000"
+        },
+        {
+            "cue": "Exhaust system bent or dragging",
+            "damage_area": "Exhaust",
+            "risk": "Exhaust leak, loud noise, emissions failure",
+            "repair_action": "Exhaust component straightening or replacement",
+            "cost_estimate": "$300-$1,000"
+        },
+        {
+            "cue": "Suspension component bent or broken",
+            "damage_area": "Suspension",
+            "risk": "Handling affected, alignment issues, unsafe driving",
+            "repair_action": "Suspension component replacement and alignment",
+            "cost_estimate": "$600-$2,500"
+        },
+        {
+            "cue": "Fuel tank scrape or dent",
+            "damage_area": "Fuel Tank",
+            "risk": "Fuel leak hazard, fire risk",
+            "repair_action": "Fuel tank inspection, possible replacement",
+            "cost_estimate": "$500-$2,000"
+        },
+        {
+            "cue": "Differential or axle damage",
+            "damage_area": "Drivetrain",
+            "risk": "Power transmission failure, vehicle immobile",
+            "repair_action": "Drivetrain component repair or replacement",
+            "cost_estimate": "$1,000-$4,000"
+        }
+    ]
+}

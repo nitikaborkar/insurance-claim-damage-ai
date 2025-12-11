@@ -1,6 +1,5 @@
 flask
 langgraph
-langchain-anthropic
 langchain-core
 pandas
 openpyxl
@@ -11,3 +10,8 @@ flask_cors
 Werkzeug
 filetype
 waitress
+requests
+langchain_google_genai
+streamlit==1.32.0
+typing-extensions
+streamlit   

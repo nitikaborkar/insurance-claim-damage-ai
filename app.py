@@ -1,5 +1,5 @@
-import ergo_agent.config 
-from ergo_agent.config import VALID_API_KEYS  # Import validated keys
+import car_agent.config 
+from car_agent.config import VALID_API_KEYS  # Import validated keys
 from flask import Flask, request, jsonify
 import tempfile
 import os
@@ -9,7 +9,7 @@ from logging.handlers import RotatingFileHandler
 from werkzeug.utils import secure_filename
 from werkzeug.middleware.proxy_fix import ProxyFix
 import filetype
-from ergo_agent.service import analyze_image_path
+from car_agent.service import analyze_image_path
 from flask_limiter import Limiter
 from flask_cors import CORS
 from flask_limiter.util import get_remote_address
@@ -85,7 +85,11 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10MB
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'}
 
-CORS_ORIGINS = os.getenv("CORS_ORIGINS", "https://staging-personal.balanceflo.ai").split(",")
+CORS_ORIGINS = os.getenv(
+    "CORS_ORIGINS", 
+    "http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000"
+).split(",")
+
 CORS(app, resources={r"/analyze": {
     "origins": CORS_ORIGINS
 }})
@@ -219,6 +223,7 @@ def analyze():
             tmp_path = tmp.name
 
         result = analyze_image_path(tmp_path)
+        app.logger.info(f"Damage assessment completed: {result.get('claim_decision', 'UNKNOWN')}")
         return jsonify(result), 200
         
     except ValueError as e:
